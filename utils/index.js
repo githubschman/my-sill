@@ -11,7 +11,6 @@ export const decreaseInventory = (item, props, userRef) => {
 }
 
 export const sillType = (temp, sun) => {
-
     
     // FOR AM OR PM SILLS
     let date = new Date();

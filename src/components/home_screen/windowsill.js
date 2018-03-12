@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+const Sound = require('react-native-sound');
 import {
   Text,
   View,
@@ -13,24 +14,22 @@ import {
   Alert,
   InteractionManager,
 } from 'react-native';
-
 // backgrounds:
 import BackgroundImage from '../../views/background'
 import SingleBackgroundImage from '../../views/single_background'
+// all pictures
+const pix = require("../../assets/images/plantpicturecollection"); 
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import Share from 'react-native-share'
 import { Actions } from 'react-native-mobx'
 import _ from 'lodash'
-import moment from 'moment'
 import { observer,inject } from 'mobx-react/native'
 import { getColor } from '../config'
 import { firebaseApp } from '../../firebase'
 import { createStageArr, decreaseInventory, newMessage, thumbNail, sillType, plantPic } from '../../../utils'
 import { hour, setUpPlant, Planter } from '../../planterconfig';
 
-// all pictures
-const pix = require("../../assets/images/plantpicturecollection"); 
 
 
 require('../../../secrets')
@@ -60,7 +59,10 @@ export default class WindowSill extends Component {
       watered: false, // temporary watered on local state for graphics reasons
       sillPic: 'default',
       toggleInfo: false,
-      wateringCan: false
+      wateringCan: false,
+      song: {},
+      songIsPlaying: false,
+      allSongs: {}
     }
     
     this.store = this.props.appStore
@@ -88,9 +90,78 @@ export default class WindowSill extends Component {
       }
     };
     xhr.send();
-}
+  }
+
+  preloadSoungs() {
+
+    // rain-night
+// rain
+// snow-night
+// snow
+// default
+// default-night
+
+    let snow = new Sound('snow.mp3', Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+    });
+
+    let rain = new Sound('rain.mp3', Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+    });
+
+    let rainNight = new Sound('rain-night.mp3', Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+    });
+
+    let snowNight = new Sound('snow-night.mp3', Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+    });
+
+    let clearNight = new Sound('clear-night.mp3', Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+    });
+
+    let defaultSoundPath = (Math.floor(Math.random() * 100) % 2) ? 'sunny-day.mp3' : 'sunny-day2.mp3';
+
+    let defaultSound = new Sound(defaultSoundPath, Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+    });
+
+    this.setState({allSongs: {
+      'snow-night': snowNight,
+      'snow': snow,
+      'rain-night': rainNight,
+      'rain': rain,
+      'default': defaultSound,
+      'default-night': clearNight
+    }})
+    
+  }
 
   componentDidMount() {
+
+    // Preloading all the songs (and sounds)
+    Sound.setCategory('Playback');
+    this.preloadSoungs()
+
     let fetchingWeather = this.store.fetchWeather(this.userRef);
     let checkingUserLevel = this.store.checkUserLevel(this.userRef);
 
@@ -119,16 +190,33 @@ export default class WindowSill extends Component {
       this.store.checkWeatherAgainstPlants(plantId, this.userRef, this.store.weather);
       plantId++;
     }
+
     this.setState({sillPic: sillType(this.store.weather.temp, this.store.weather.sun)});
     if (this.store.weatherPic !== this.state.sillPic) {
       this.store.weatherPic = this.state.sillPic;
     }
+
+    this.setState({song: this.state.allSongs[this.store.weatherPic]});
+
     this.refresh((result) => {this.setState({connected: result})});
 
+    // if ya boy is on the move
     navigator.geolocation.getCurrentPosition((loc)=>{
       this.store.user_long = String(loc.coords.longitude);
       this.store.user_lat =  String(loc.coords.latitude);
     }, null, { enableHighAccuracy: true}); 
+
+      if (!this.state.songIsPlaying){
+        this.state.song.play((success) => {
+          if (success) {
+            console.log('successfully finished playing');
+          }
+        });
+        this.setState({songIsPlaying: true});
+        // loops song forever
+        this.state.song.setNumberOfLoops(-1);
+      }
+
   }
 
   componentDidUpdate() {
