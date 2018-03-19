@@ -158,6 +158,30 @@ module.exports = {
         4: require('./plants/orchid/4.png'),
         5: require('./plants/orchid/5.png')
     },
+    amaryllis: {
+        2: require('./plants/amaryllis/2.png'),
+        3: require('./plants/amaryllis/3.png'),
+        4: require('./plants/amaryllis/4.png'),
+        5: require('./plants/amaryllis/5.png')
+    },
+    venusflytrap: {
+        2: require('./plants/venusflytrap/2.png'),
+        3: require('./plants/venusflytrap/3.png'),
+        4: require('./plants/venusflytrap/4.png'),
+        5: require('./plants/venusflytrap/5.png')
+    },
+    succulentterrarium: {
+        2: require('./plants/succulentterrarium/2.png'),
+        3: require('./plants/succulentterrarium/3.png'),
+        4: require('./plants/succulentterrarium/4.png'),
+        5: require('./plants/succulentterrarium/5.png')
+    },
+    cilantro: {
+        2: require('./plants/cilantro/2.png'),
+        3: require('./plants/cilantro/3.png'),
+        4: require('./plants/cilantro/4.png'),
+        5: require('./plants/cilantro/5.png')
+    },
     fullplant: {
         aloevera: require('./plants/aloevera.png'),
         pricklypear: require('./plants/pricklypear.png'), 
@@ -177,6 +201,10 @@ module.exports = {
         invictusplant: require('./plants/invictusplant.png'),
         paperwhites: require('./plants/paperwhites.png'),
         prayerplant: require('./plants/prayerplant.png'),
-        orchid: require('./plants/orchid.png')
+        orchid: require('./plants/orchid.png'),
+        amaryllis: require('./plants/amaryllis.png'),
+        venusflytrap: require('./plants/venusflytrap.png'),
+        succulentterrarium: require('./plants/succulentterrarium.png'),
+        cilantro: require('./plants/cilantro.png'),
     },
 }
