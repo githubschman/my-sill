@@ -62,7 +62,7 @@ export default class WindowSill extends Component {
       wateringCan: false,
       song: {},
       songIsPlaying: false,
-      allSongs: {}
+      allSounds: {}
     }
     
     this.store = this.props.appStore
@@ -93,13 +93,6 @@ export default class WindowSill extends Component {
   }
 
   preloadSoungs() {
-
-    // rain-night
-// rain
-// snow-night
-// snow
-// default
-// default-night
 
     let snow = new Sound('snow.mp3', Sound.MAIN_BUNDLE, (error) => {
       if (error) {
@@ -144,15 +137,20 @@ export default class WindowSill extends Component {
         return;
       }
     });
-
-    this.setState({allSongs: {
+    let allSounds = {
       'snow-night': snowNight,
       'snow': snow,
       'rain-night': rainNight,
       'rain': rain,
       'default': defaultSound,
-      'default-night': clearNight
-    }})
+      'default-night': clearNight,
+      // hoe,
+      // water,
+      // plant seed
+    };
+
+    this.setState({allSounds: allSounds});
+    this.store.allSounds = allSounds;
     
   }
 
@@ -196,7 +194,7 @@ export default class WindowSill extends Component {
       this.store.weatherPic = this.state.sillPic;
     }
 
-    this.setState({song: this.state.allSongs[this.store.weatherPic]});
+    this.setState({song: this.state.allSounds[this.store.weatherPic]});
 
     this.refresh((result) => {this.setState({connected: result})});
 
@@ -328,7 +326,7 @@ export default class WindowSill extends Component {
         if (planter) {
           let oldStageTimes = this.state.selectedPlanter.currentPlant.stage_times;
           let newStageTimes = [];
-          let percentDecrease = (item.price / 100 * 3600000) + 5; // this will change for each fertilizer
+          let percentDecrease = (item.price / 50 * 3600000) + 5; // this will change for each fertilizer
           
           oldStageTimes.forEach(oldTime => {
             newStageTimes.push(Math.floor(oldTime - percentDecrease));

@@ -23,6 +23,8 @@ class AppStore {
   @observable stats = {grown: 0, killed: 0};
   @observable idealWeather = { 0: false, 1: false, 2: false, 3: false};
   @observable levelPercentage = 1;
+  @observable mute = false;
+  @observable allSounds = {};
 
 
   fetchWeather(userRef) {

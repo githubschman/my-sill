@@ -7,6 +7,8 @@ module.exports = {
     nav2active: require('./nav/nav3active.png'),
     defaultPic: require('./default.gif'),
     defaultNightPic: require('./default-night.gif'),
+    sound: require('./sound.png'),
+    noSound: require('./nosound.png'),
     rainPic: require('./rain.gif'),
     rainNightPic: require('./rain-night.gif'),
     snowPic: require('./snow.gif'),

@@ -91,7 +91,17 @@ const pix = require("../../assets/images/plantpicturecollection");
   }
 
   _userEdit = () => {
-    Actions.setting()
+    Actions.setting();
+  }
+
+  _toggleMute = () => {
+    this.store.mute = !this.store.mute;
+    let level = this.store.mute ? 0 : .5;
+    let allSounds = this.store.allSounds;
+
+    for (let sound in allSounds) {
+      allSounds[sound].setVolume(level);
+    }
   }
 
   _logOut = () => {
@@ -174,10 +184,15 @@ const pix = require("../../assets/images/plantpicturecollection");
             <View style={styles.profileCountsContainer}>
             </View>
             <View style={styles.profileCountsContainer}>
-              <TouchableOpacity onPress={this._logOut}>
-                <Text style={styles.logout}> Log Out </Text>
+              <TouchableOpacity onPress={this._toggleMute}>
+                <Text style={styles.logout}>{this.store.mute ? <Image style={styles.mute} source={pix.noSound} /> : <Image style={styles.mute} source={pix.sound} />}</Text>
               </TouchableOpacity>
             </View>
+            <View style={styles.profileCountsContainer}>
+            <TouchableOpacity onPress={this._logOut}>
+              <Text style={styles.logout}> Log Out </Text>
+            </TouchableOpacity>
+          </View>
           </View>
           <View style={styles.progressBar}>
           <Text style={styles.levelText}>Level {this.store.user_level}</Text>
@@ -268,7 +283,7 @@ const styles = StyleSheet.create({
   profileName: {
     marginLeft: 10,
     fontFamily: 'Press Start 2P',
-    fontSize: 11,
+    fontSize: 10,
     color: '#fff',
   },
   profileCountsContainer: {
@@ -286,6 +301,10 @@ const styles = StyleSheet.create({
     padding: 5,
     width: 100,
     height: 100
+  },
+  mute: {
+    width: 15,
+    height: 15
   },
   profileCounts: {
     fontFamily: 'Press Start 2P',
@@ -316,7 +335,7 @@ const styles = StyleSheet.create({
   },
   logout: {
     fontFamily: 'Pxlvetica',
-    fontSize: 15,
+    fontSize: 11,
     color: '#fff'
   },
   hallOfFarmContainer: {
