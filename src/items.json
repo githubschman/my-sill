@@ -432,10 +432,28 @@
             "watered" : 0,
             "id": 23
         },
+        "minilemontree" : {
+            "type" : "seed",
+            "name" : "Mini Lemon Tree",
+            "price" : 47,
+            "level_req" : 9,
+            "survival" : 24,
+            "high": 110,
+            "low": 90,
+            "best_sun" : "sunny",
+            "stage_times" : [1,2,3,4,5],
+            "total_time" : 324000000,
+            "time_growing" : 0,
+            "sell_val" : 50,
+            "description" : "Like the developer of this game, a little sour.",
+            "stage" : 1,
+            "watered" : 0,
+            "id": 24
+        },
         "mystery" : {
             "type" : "mystery",
             "name" : "Mystery",
-            "price" : 100,
+            "price" : 20,
             "level_req" : 2,
             "description" : "Don't try to climb whatever these seeds grow, no matter what any giants tell you.",
             "id": 999

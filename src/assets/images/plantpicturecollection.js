@@ -184,6 +184,18 @@ module.exports = {
         4: require('./plants/cilantro/4.png'),
         5: require('./plants/cilantro/5.png')
     },
+    minilemontree: {
+        2: require('./plants/minilemontree/2.png'),
+        3: require('./plants/minilemontree/3.png'),
+        4: require('./plants/minilemontree/4.png'),
+        5: require('./plants/minilemontree/5.png')
+    },
+    minisilverballcactus: {
+        2: require('./plants/minisilverballcactus/2.png'),
+        3: require('./plants/minisilverballcactus/3.png'),
+        4: require('./plants/minisilverballcactus/4.png'),
+        5: require('./plants/minisilverballcactus/5.png')
+    },
     fullplant: {
         aloevera: require('./plants/aloevera.png'),
         pricklypear: require('./plants/pricklypear.png'), 
@@ -208,5 +220,7 @@ module.exports = {
         venusflytrap: require('./plants/venusflytrap.png'),
         succulentterrarium: require('./plants/succulentterrarium.png'),
         cilantro: require('./plants/cilantro.png'),
+        minisilverballcactus: require('./plants/minisilverballcactus.png'),
+        minilemontree: require('./plants/minilemontree.png'),
     },
 }
