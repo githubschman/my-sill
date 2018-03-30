@@ -326,7 +326,7 @@ export default class WindowSill extends Component {
         if (planter) {
           let oldStageTimes = this.state.selectedPlanter.currentPlant.stage_times;
           let newStageTimes = [];
-          let percentDecrease = (item.price / 50 * 3600000) + 5; // this will change for each fertilizer
+          let percentDecrease = (item.price / 10 * 3600000) + 5; // this will change for each fertilizer
           
           oldStageTimes.forEach(oldTime => {
             newStageTimes.push(Math.floor(oldTime - percentDecrease));

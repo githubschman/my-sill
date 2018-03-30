@@ -416,7 +416,7 @@
         },
         "minisilverballcactus" : {
             "type" : "seed",
-            "name" : "Mini Silver Ball Cactus",
+            "name" : "Mini Ball Cactus",
             "price" : 44,
             "level_req" : 9,
             "survival" : 24,
@@ -427,7 +427,7 @@
             "total_time" : 324000000,
             "time_growing" : 0,
             "sell_val" : 50,
-            "description" : "For an Arizona Christmas.",
+            "description" : "For your Christmas cactus.",
             "stage" : 1,
             "watered" : 0,
             "id": 23
@@ -450,6 +450,24 @@
             "watered" : 0,
             "id": 24
         },
+        "floweringmaple" : {
+            "type" : "seed",
+            "name" : "Flowering Maple",
+            "price" : 45,
+            "level_req" : 9,
+            "survival" : 24,
+            "high": 60,
+            "low": 40,
+            "best_sun" : "cloudy",
+            "stage_times" : [1,2,3,4,5],
+            "total_time" : 324000000,
+            "time_growing" : 0,
+            "sell_val" : 47,
+            "description" : "Suitable for bouqets AND pancakes.",
+            "stage" : 1,
+            "watered" : 0,
+            "id": 25
+        },
         "mystery" : {
             "type" : "mystery",
             "name" : "Mystery",
@@ -461,29 +479,29 @@
         "basic-fertilizer" : {
             "type" : "fertilizer",
             "name" : "Basic Fertilizer",
-            "description": "Has a pH over 7.",
-            "price" : 100,
+            "description": "Grow your plants just a little bit faster.",
+            "price" : 50,
             "level_req" : 2
         },
         "medium-fertilizer" : {
             "type" : "fertilizer",
             "name" : "Medium Fertilizer",
             "description" : "The plant fertilizer that can talk to ghosts.",
-            "price" : 200,
+            "price" : 100,
             "level_req" : 5
         },
         "strong-fertilizer" : {
             "type" : "fertilizer",
             "name" : "Strong Fertilizer",
             "description": "Made from the best poop money can buy.",
-            "price" : 300,
+            "price" : 200,
             "level_req" : 6
         },
         "ultra-fertilizer" : {
             "type" : "fertilizer",
             "name" : "Ultra Fertilizer",
             "description" : "This is the stuff the Barry Bonds used.",
-            "price" : 1000,
+            "price" : 500,
             "level_req" : 10
         }
     }
