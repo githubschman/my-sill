@@ -468,6 +468,24 @@
             "watered" : 0,
             "id": 25
         },
+        "peacelily" : {
+            "type" : "seed",
+            "name" : "Peace Lily",
+            "price" : 53,
+            "level_req" : 10,
+            "survival" : 12,
+            "high": 45,
+            "low": 30,
+            "best_sun" : "fog",
+            "stage_times" : [1,2,3,4,5],
+            "total_time" : 324000000,
+            "time_growing" : 0,
+            "sell_val" : 47,
+            "description" : "Got its butt kicked in the War of Roses.",
+            "stage" : 1,
+            "watered" : 0,
+            "id": 26
+        },
         "mystery" : {
             "type" : "mystery",
             "name" : "Mystery",

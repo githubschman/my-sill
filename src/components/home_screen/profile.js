@@ -183,14 +183,14 @@ const pix = require("../../assets/images/plantpicturecollection");
             </View>
             <View style={styles.profileCountsContainer}>
             </View>
-            <View style={styles.profileCountsContainer}>
-              <TouchableOpacity onPress={this._toggleMute}>
-                <Text style={styles.logout}>{this.store.mute ? <Image style={styles.mute} source={pix.noSound} /> : <Image style={styles.mute} source={pix.sound} />}</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.profileCountsContainer}>
+          <View style={styles.profileCountsContainer}>
             <TouchableOpacity onPress={this._logOut}>
               <Text style={styles.logout}> Log Out </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.profileCountsContainer}>
+            <TouchableOpacity onPress={this._toggleMute}>
+              <Text style={styles.logout}>{this.store.mute ? <Image style={styles.mute} source={pix.noSound} /> : <Image style={styles.mute} source={pix.sound} />}</Text>
             </TouchableOpacity>
           </View>
           </View>

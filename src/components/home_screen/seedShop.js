@@ -270,10 +270,13 @@ export default class SeedShop extends Component {
           <View style={styles.profileCountsContainer}>
             <Text style={styles.title}> {this.state.selectedItem.name} </Text>
             <Text style={styles.info}> {this.state.selectedItem.description} </Text>
+            {this.state.selectedItem.type === "seed" && this.state.selectedItem.name !== "mystery" ? 
+            <Text style={styles.water}> (Water every {this.state.selectedItem.survival} hours) </Text> : null}
             {this.state.selectedItem.type === "seed" && this.state.selectedItem.name !== "mystery"  ? 
             <Image source={seedPics[this.state.selectedItem.id%(seedPics.length)]} style={styles.singleSeedImage}/> :
             <Image source={pix[this.state.selectedItem.type]} style={styles.singleSeedImage}/> }
-
+            
+            
             { this.state.selectedItem.level_req > this.props.appStore.user_level ? 
                 <Text style={styles.info}> Level {this.state.selectedItem.level_req} required!</Text> :
               <View style={styles.center}>
@@ -331,8 +334,7 @@ const styles = StyleSheet.create({
   },
   button: {
     bottom: 0,
-    marginTop: 50,
-    marginBottom: 50,
+    marginBottom: 20,
     backgroundColor: '#005c50',
     borderRadius: 20,
     flexDirection: 'row',
@@ -384,8 +386,8 @@ const styles = StyleSheet.create({
     height: 300
   },
   singleSeedImage: {
-    width: 225,
-    height: 225
+    width: 230,
+    height: 230
   },
   countsName: {
     fontSize: 10,
@@ -433,6 +435,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Pxlvetica',
     fontSize: 22,
+    color: '#fff'
+  },
+  water: {
+    padding: 0,
+    textAlign: 'center',
+    fontFamily: 'Pxlvetica',
+    fontSize: 18,
     color: '#fff'
   },
   amount: {
