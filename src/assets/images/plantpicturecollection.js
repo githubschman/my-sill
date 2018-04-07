@@ -208,6 +208,12 @@ module.exports = {
         4: require('./plants/peacelily/4.png'),
         5: require('./plants/peacelily/5.png')
     },
+    jasmine: {
+        2: require('./plants/jasmine/2.png'),
+        3: require('./plants/jasmine/3.png'),
+        4: require('./plants/jasmine/4.png'),
+        5: require('./plants/jasmine/5.png')
+    },
     fullplant: {
         aloevera: require('./plants/aloevera.png'),
         pricklypear: require('./plants/pricklypear.png'), 
@@ -236,5 +242,6 @@ module.exports = {
         minilemontree: require('./plants/minilemontree.png'),
         floweringmaple: require('./plants/floweringmaple.png'),
         peacelily: require('./plants/peacelily.png'),
+        jasmine: require('./plants/jasmine.png'),
     },
 }

@@ -486,6 +486,24 @@
             "watered" : 0,
             "id": 26
         },
+        "jasmine" : {
+            "type" : "seed",
+            "name" : "Jasmine",
+            "price" : 55,
+            "level_req" : 10,
+            "survival" : 12,
+            "high": 70,
+            "low": 60,
+            "best_sun" : "fog",
+            "stage_times" : [1,2,3,4,5],
+            "total_time" : 324000000,
+            "time_growing" : 0,
+            "sell_val" : 61,
+            "description" : "Tell me, houseplant, now when did you just let your roots decide?",
+            "stage" : 1,
+            "watered" : 0,
+            "id": 27
+        },
         "mystery" : {
             "type" : "mystery",
             "name" : "Mystery",
