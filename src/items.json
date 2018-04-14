@@ -666,6 +666,24 @@
             "watered" : 0,
             "id": 36
         },
+        "starfruit" : {
+            "type" : "seed",
+            "name" : "Starfruit",
+            "price" : 100,
+            "level_req" : 14,
+            "survival" : 12,
+            "high": 85,
+            "low": 80,
+            "best_sun" : "rain",
+            "stage_times" : [1,2,3,4,5],
+            "total_time" : 604800000,
+            "time_growing" : 0,
+            "sell_val" : 150,
+            "description" : "The most fruitful plant available, in terms of gold and... fruit!",
+            "stage" : 1,
+            "watered" : 0,
+            "id": 37
+        },
         "mystery" : {
             "type" : "mystery",
             "name" : "Mystery",
