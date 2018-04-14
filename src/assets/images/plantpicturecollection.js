@@ -214,6 +214,60 @@ module.exports = {
         4: require('./plants/jasmine/4.png'),
         5: require('./plants/jasmine/5.png')
     },
+    clivialily: {
+        2: require('./plants/clivialily/2.png'),
+        3: require('./plants/clivialily/3.png'),
+        4: require('./plants/clivialily/4.png'),
+        5: require('./plants/clivialily/5.png')
+    },
+    streptocarpus: {
+        2: require('./plants/streptocarpus/2.png'),
+        3: require('./plants/streptocarpus/3.png'),
+        4: require('./plants/streptocarpus/4.png'),
+        5: require('./plants/streptocarpus/5.png')
+    },
+    calamondinorange: {
+        2: require('./plants/calamondinorange/2.png'),
+        3: require('./plants/calamondinorange/3.png'),
+        4: require('./plants/calamondinorange/4.png'),
+        5: require('./plants/calamondinorange/5.png')
+    },
+    brazilianfireworks: {
+        2: require('./plants/brazilianfireworks/2.png'),
+        3: require('./plants/brazilianfireworks/3.png'),
+        4: require('./plants/brazilianfireworks/4.png'),
+        5: require('./plants/brazilianfireworks/5.png')
+    },
+    gloxinia: {
+        2: require('./plants/gloxinia/2.png'),
+        3: require('./plants/gloxinia/3.png'),
+        4: require('./plants/gloxinia/4.png'),
+        5: require('./plants/gloxinia/5.png')
+    },
+    rainboworchid: {
+        2: require('./plants/rainboworchid/2.png'),
+        3: require('./plants/rainboworchid/3.png'),
+        4: require('./plants/rainboworchid/4.png'),
+        5: require('./plants/rainboworchid/5.png')
+    },
+    ixora: {
+        2: require('./plants/ixora/2.png'),
+        3: require('./plants/ixora/3.png'),
+        4: require('./plants/ixora/4.png'),
+        5: require('./plants/ixora/5.png')
+    },
+    weepingwillow: {
+        2: require('./plants/weepingwillow/2.png'),
+        3: require('./plants/weepingwillow/3.png'),
+        4: require('./plants/weepingwillow/4.png'),
+        5: require('./plants/weepingwillow/5.png')
+    },
+    africanviolet: {
+        2: require('./plants/africanviolet/2.png'),
+        3: require('./plants/africanviolet/3.png'),
+        4: require('./plants/africanviolet/4.png'),
+        5: require('./plants/africanviolet/5.png')
+    },
     fullplant: {
         aloevera: require('./plants/aloevera.png'),
         pricklypear: require('./plants/pricklypear.png'), 
@@ -243,5 +297,14 @@ module.exports = {
         floweringmaple: require('./plants/floweringmaple.png'),
         peacelily: require('./plants/peacelily.png'),
         jasmine: require('./plants/jasmine.png'),
+        clivialily: require('./plants/clivialily.png'),
+        streptocarpus: require('./plants/streptocarpus.png'),
+        calamondinorange: require('./plants/calamondinorange.png'),
+        brazilianfireworks: require('./plants/brazilianfireworks.png'),
+        gloxinia: require('./plants/gloxinia.png'),
+        rainboworchid: require('./plants/rainboworchid.png'),
+        ixora: require('./plants/ixora.png'),
+        weepingwillow: require('./plants/weepingwillow.png'),
+        africanviolet: require('./plants/africanviolet.png'),
     },
 }

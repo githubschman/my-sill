@@ -420,7 +420,7 @@ export default class WindowSill extends Component {
     //  plants will be here!
     renderPlanters = (planter) => {
       
-      let dirt = pix.dirt;
+      let dirt = pix.wetDirt;
       let planterPic = this.getPlanterPic(planter.id);
       let plant = planter.currentPlant;
       let plantName = plant && plant.name ? plant.name.split(' ').join('').toLowerCase() : '';
