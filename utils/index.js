@@ -16,7 +16,9 @@ export const sillType = (temp, sun) => {
     let date = new Date();
     let fulltime = date.toLocaleString('en-US', { hour: 'numeric', hour12: true });
     let time = fulltime.split(' ');
-    let pm = time.includes('PM') && Number(time[0]) > 6 && Number(time[0]) < 12;
+    let h = Number(time[0]);
+    let a = time[1];
+    let pm = (a === 'PM' && h > 6) || (a === 'AM' && h < 6) || (a === 'AM' && h === 12);
 
     let str = 'default';
     let rainWords = ['rain', 'drizzle', 'snow'];

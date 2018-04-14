@@ -137,6 +137,21 @@ export default class WindowSill extends Component {
         return;
       }
     });
+
+    let hoeSound = new Sound('hoe.wav', Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+    });
+
+    let waterSound = new Sound('water.wav', Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+    });
+
     let allSounds = {
       'snow-night': snowNight,
       'snow': snow,
@@ -144,8 +159,8 @@ export default class WindowSill extends Component {
       'rain': rain,
       'default': defaultSound,
       'default-night': clearNight,
-      // hoe,
-      // water,
+      'hoeSound': hoeSound,
+      'waterSound': waterSound,
       // plant seed
     };
 
@@ -236,6 +251,13 @@ export default class WindowSill extends Component {
     } else {
       this.setState({watered: false})
     }
+
+    this.state.allSounds.waterSound.setVolume(10.0);
+    this.state.allSounds.waterSound.play((success) => {
+      if (success) {
+        console.log('successfully finished playing');
+      }
+    });
   }
 
   componentWillReceiveProps() {
@@ -353,6 +375,12 @@ export default class WindowSill extends Component {
           this.setState({selectedPlanter: emptyPlant});
           planterRef.update({hoed: false, currentPlant: new Planter(planterId)});
         }
+        this.state.allSounds.hoeSound.setVolume(10.0);
+        this.state.allSounds.hoeSound.play((success) => {
+          if (success) {
+            console.log('successfully finished playing');
+          }
+        });
       })
       .catch(console.error);
     }

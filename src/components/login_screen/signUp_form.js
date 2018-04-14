@@ -78,13 +78,8 @@ export default class SignUpForm extends Component {
           transparent={false}
           visible={this.state.modalVisible}
         >
-          <View style={{ marginTop:22 }}>
+          <View style={{ marginTop:22, marginBottom:22 }}>
             <ScrollView>
-              <TouchableOpacity style={{ alignItems: 'center', }} onPress={() => {this.setModalVisible(!this.state.modalVisible)}}>
-                <View style={styles.submitBtnContainer}>
-                  <Text style={styles.submitBtn}>CLOSE</Text>
-                </View>
-              </TouchableOpacity>
               <HowTo />
               <TouchableOpacity style={{ alignItems: 'center', }} onPress={() => {this.setModalVisible(!this.state.modalVisible)}}>
                 <View style={styles.submitBtnContainer}>
@@ -321,6 +316,6 @@ const styles = StyleSheet.create({
   },
   showModal: {
     marginTop: 40,
-    alignItems: 'center',
+    alignItems: 'center'
   }
 })
