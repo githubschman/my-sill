@@ -39,5 +39,3 @@ buck-out/
 android/app/libs
 android/keystores/debug.keystore
 yarn-error.log
-
-secrets.js

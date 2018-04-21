@@ -85,6 +85,7 @@ export default class SignUpForm extends Component {
                 <View style={styles.submitBtnContainer}>
                   <Text style={styles.submitBtn}>CLOSE</Text>
                 </View>
+                <Text style={styles.dopetunes}> Thanks to Kevin Macleod and Bensounds.com for the dope tunes. </Text>
               </TouchableOpacity>
             </ScrollView>
          </View>
@@ -317,5 +318,15 @@ const styles = StyleSheet.create({
   showModal: {
     marginTop: 40,
     alignItems: 'center'
-  }
+  },
+  dopetunes: {
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 5,
+    marginBottom: 5,
+    fontFamily: 'Press Start 2P',
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#4b6f9c'
+  },
 })

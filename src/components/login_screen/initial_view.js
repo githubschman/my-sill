@@ -34,7 +34,7 @@ export default class InitialView extends Component {
       style={styles.container}
       delay={this.props.animDelay}
       onAnimationEnd={this._handleAnimEnd.bind(this)}>
-        <Text style={styles.title}>Sill</Text>
+        <Text style={styles.title}>MySill</Text>
         <View style={styles.btnBox}>
           <TouchableOpacity onPress={this._handleSignInPress.bind(this)}>
             <View style={styles.btnContainer}>
@@ -79,11 +79,13 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   },
   title: {
+    alignItems: 'center',
     fontFamily: 'Press Start 2P',
     backgroundColor: 'transparent',
     marginTop: 20,
+    marginBottom: 20,
     fontWeight: '300',
-    fontSize: 70,
+    fontSize: 50,
     color: '#fff',
   },
   version: {

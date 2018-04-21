@@ -241,7 +241,7 @@ export default class SeedShop extends Component {
           
           {!this.state.selectedItem.name ? <TouchableOpacity onPress={() => this.showInventory()}> 
             <View style={styles.profileCountsContainer}>
-              {!this.state.show  ? <Image source={pix.infoUp} style={styles.infoButton}/> : <Image source={pix.infoDown} style={styles.infoButton}/> }
+              {/* !this.state.show  ? <Image source={pix.infoUp} style={styles.infoButton}/> : <Image source={pix.infoDown} style={styles.infoButton}/> */}
             </View>
           </TouchableOpacity>
           : null}
@@ -267,7 +267,7 @@ export default class SeedShop extends Component {
         </View> : <View><Text></Text></View>}
 
         {this.state.selectedItem.name && !this.state.ownInventory && this.state.show ?
-          <View style={styles.profileCountsContainer}>
+          <View style={styles.profileCountsContainerSingle}>
             <Text style={styles.title}> {this.state.selectedItem.name} </Text>
             <Text style={styles.info}> {this.state.selectedItem.description} </Text>
             {this.state.selectedItem.type === "seed" && this.state.selectedItem.name !== "mystery" ? 
@@ -368,6 +368,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'Press Start 2P',
     color: '#fff',
+  },
+  profileCountsContainerSingle: {
+    flex: 1,
+    alignItems: 'center',
+    paddingBottom: 5,
+    backgroundColor: '#8fc9bb'
   },
   profileCountsContainer: {
     flex: 1,

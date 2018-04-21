@@ -319,6 +319,17 @@ export default class WindowSill extends Component {
       }
     })
   }
+
+  getHoursTillNextStage = () => {
+    let currentPlant = this.state.selectedPlanter.currentPlant;
+    let stageTimes = currentPlant.stage_times;
+    let today = new Date();
+    let now = today.getTime();
+    let nextStage = stageTimes[currentPlant.stage];
+    let timeTill = Math.floor((nextStage - now) / hour);
+
+    return timeTill;
+  }
   
   plantSeed = (item, planterId) => {
     let today = new Date();
@@ -535,7 +546,13 @@ export default class WindowSill extends Component {
       let currentPlant = planter.currentPlant || null;
       let plant = planter.currentPlant;
       let plantName = plant && plant.name ? plant.name.split(' ').join('').toLowerCase() : '';
-      let dirt = pix.wetDirt; 
+      let dirt = pix.wetDirt;
+      let timeTill = ''
+
+      if (this.state.singlePlant) {
+        let time = this.getHoursTillNextStage()
+        timeTill = time < 2 ? `${time} hour until next stage` : `${time} hours until next stage`;
+      }
   
       if (!this.state.watered) {
         dirt = this.getDirtType(planter);
@@ -550,7 +567,7 @@ export default class WindowSill extends Component {
   
             {/* windowsill and background pics */}
             {!this.state.singlePlant ? <Image source={windowsill}  style={styles.sill}/> : <Text></Text>}
-            {!this.state.singePlant ? <Image source={pix.pipePic} style={styles.pipe}/> : <Text></Text>} 
+            {!this.state.singePlant ? <Image source={pix.pipePic} style={styles.pipe}/> : <Text></Text> } 
             {!this.state.singlePlant ? <BackgroundImage/> : <SingleBackgroundImage />}
   
             {/* single plant and planters view */}
@@ -571,10 +588,10 @@ export default class WindowSill extends Component {
 
                   {(this.state.tempPlant.name || currentPlant.name) && this.state.toggleInfo ? <View style={styles.plantInfo} > 
                   {this.showPlantName(currentPlant, this.state.tempPlant) ? <Text style={styles.plantTitle}> {(currentPlant.name || this.state.tempPlant.name)}  </Text>  : <Text style={styles.plantTitle}> ??? </Text>}
-                    {currentPlant.stage === 'dead' ? <Text style={styles.info}> dead :( </Text> : <Text style={styles.info}> lvl {currentPlant.stage || this.state.tempPlant.stage} </Text>}
+                    {currentPlant.stage === 'dead' ? <Text style={styles.info}> dead :( </Text> : <Text style={styles.info}> stage {currentPlant.stage || this.state.tempPlant.stage} </Text>}
                     <Text style={styles.info}> likes: {(currentPlant.high+currentPlant.low)/2 || (this.state.tempPlant.high + this.state.tempPlant.low)/2}° {currentPlant.best_sun || this.state.tempPlant.best_sun} </Text>
                     {this.store.idealWeather[this.state.selectedPlanter.id] === true ? <Text style={styles.info}> ideal weather! </Text> : <Text></Text>} 
-                    {currentPlant.stage === 5 ? <TouchableOpacity style={styles.button} onPress={() => this.pluck()}><Text style={styles.info}> sell for {currentPlant.sell_val || this.state.tempPlant.sell_val}g </Text></TouchableOpacity> : null }
+                    {currentPlant.stage === 5 ? <TouchableOpacity style={styles.button} onPress={() => this.pluck()}><Text style={styles.info}> sell for {currentPlant.sell_val || this.state.tempPlant.sell_val}g </Text></TouchableOpacity> : <Text style={styles.time}>{timeTill}</Text> }
                     </View> : <Text></Text>}
                 
       
@@ -592,7 +609,7 @@ export default class WindowSill extends Component {
               
             }
   
-            {!this.state.singlePlant ? <Image source={pix.outlet} style={styles.outlet}/> :  <View></View>}
+            {/* !this.state.singlePlant ? <Image source={pix.outlet} style={styles.outlet}/> :  <View></View> */}
             <View style={styles.inventoryBorder}></View>
             { this.state.showInventory ?
               <View style={styles.showInventory}>
@@ -621,7 +638,8 @@ export default class WindowSill extends Component {
   
   const styles = StyleSheet.create({
     container: {
-      flex: 2
+      flex: 2,
+      justifyContent: 'center'
     },
     errorcontainer: {
       flex: 1,
@@ -731,15 +749,25 @@ export default class WindowSill extends Component {
       fontSize: 15,
       paddingBottom: 5
     },
+    time: {
+      alignItems: 'center',
+      paddingBottom: 10,
+      paddingLeft: 10,
+      fontFamily: 'Press Start 2P',
+      color: '#005c50',
+      fontSize: 10
+    },
     bold: {
       fontWeight: 'bold',
     },
     sill: {
-      height: 400,
-      width: 400,
+      height: 520,
+      width: 520,
       zIndex: 0,
       justifyContent:'center',
-      top: 40,
+      alignItems: 'center',
+      top: 10,
+      left: -60,
       position: 'absolute'
     },
     pipe: {
@@ -747,12 +775,12 @@ export default class WindowSill extends Component {
       position: 'absolute'
     },
     sillClose: {
-      height: 600,
-      width: 600,
+      height: 800,
+      width: 800,
       zIndex: 0,
       justifyContent:'center',
       top: -140,
-      left: -115,
+      left: -195,
       position: 'absolute'
     },
     list: {
@@ -761,11 +789,6 @@ export default class WindowSill extends Component {
       flexWrap: 'wrap',
       alignItems: 'center',
       top: 270,
-    },
-    item: {
-      margin: 1,
-      width: 70,
-      height: 100
     },
     plantInfo: {
       zIndex: 100,
@@ -779,26 +802,34 @@ export default class WindowSill extends Component {
       top: 0,
       right: 0
     },
+    item: {
+      margin: 10,
+      width: 70,
+      height: 150
+    },
     planterPlant: {
+      left: -30,
       position: 'absolute',
-      top: 33,
+      top: 60,
       zIndex: 3,
-      height: 100,
-      width: 100
+      height: 140,
+      width: 140
     },
     planterDirt: {
+      left: -30,
       position: 'absolute',
-      top: 33,
+      top: 60,
       zIndex: 2,
-      height: 100,
-      width: 100
+      height: 140,
+      width: 140
     },
     planterPlanter: {
+      left: -30,
       position: 'absolute',
-      top: 33,
+      top: 60,
       zIndex: 1,
-      height: 100,
-      width: 100
+      height: 140,
+      width: 140
     },
     outlet: {
       height: 40,
@@ -815,11 +846,11 @@ export default class WindowSill extends Component {
     },
     singlePlant: {
       position: 'absolute',
-      top: 100,
-      left: 30,
+      top: 190,
+      left: 10,
       zIndex: 5,
-      height: 325,
-      width: 325
+      height: 400,
+      width: 400
     },
     showInventory: {
       backgroundColor: '#8fc9bb',
@@ -830,19 +861,19 @@ export default class WindowSill extends Component {
     },
     singlePlantDirt: {
       position: 'absolute',
-      top: 100,
-      left: 30,
+      top: 190,
+      left: 10,
       zIndex: 4,
-      height: 325,
-      width: 325
+      height: 400,
+      width: 400
     },
     singlePlantPlanter: {
       position: 'absolute',
-      top: 100,
-      left: 30,
+      top: 190,
+      left: 10,
       zIndex: 3,
-      height: 325,
-      width: 325
+      height: 400,
+      width: 400
     },
     needsWifi: {
       padding: 10,

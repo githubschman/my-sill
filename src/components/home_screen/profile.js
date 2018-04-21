@@ -79,7 +79,7 @@ const pix = require("../../assets/images/plantpicturecollection");
       let plantsOfFarm = Object.keys(stats.plants);
       // less than 2, because it's initalized with 1 empty property
       if (plantsOfFarm.length < 2) {
-        plantsOfFarm = ['grow some plants!'];
+        plantsOfFarm = ['Grow some plants!'];
       }
       this.setState({stats: stats, plantsGrown: this.state.plantsGrown.cloneWithRows((plantsOfFarm)), plantsName: this.state.plantsGrown.cloneWithRows((plantsOfFarm))})
     })
@@ -267,8 +267,8 @@ const styles = StyleSheet.create({
     width: 80
   },
   fullPlant: {
-    height: 80,
-    width: 80
+    height: 140,
+    width: 140
   },
   profileInfoContainer: {
     flexDirection: 'row',
@@ -299,8 +299,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#7DAFA3',
     margin: 10,
     padding: 5,
-    width: 100,
-    height: 100
+    width: 150,
+    height: 150
   },
   mute: {
     width: 15,
