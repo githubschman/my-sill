@@ -341,7 +341,7 @@ export default class WindowSill extends Component {
       this.plantMysterySeed();
       decreaseInventory(item, this.store, this.userRef);
     } else if (item.type === 'seed') {     
-      let totalGrowTime = item.total_time
+      let totalGrowTime = item.total_time;
       let stageArr = createStageArr(today.getTime(), totalGrowTime / 5);
       // set temp plant info:
       this.setState({notRecentlyPlanted: false, tempPlant: {name: item.name, stage: 1, id: this.state.selectedPlanter.id, best_sun: item.best_sun, high: item.high, low: item.low}});
@@ -616,7 +616,7 @@ export default class WindowSill extends Component {
                 <TouchableOpacity style={styles.showInventory} onPress={() => this.setState({showInventory: !this.state.showInventory})}><Text style={styles.x}>x</Text></TouchableOpacity>
                 <ListView
                   automaticallyAdjustContentInsets={true}
-                  initialListSize={1}
+                  initialListSize={10}
                   dataSource={this.state.userInventory}
                   renderRow={this.renderInventory}
                   onEndReachedThreshold={1}

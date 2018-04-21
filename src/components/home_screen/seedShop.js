@@ -308,7 +308,7 @@ export default class SeedShop extends Component {
           </View> :  
           <ListView
             automaticallyAdjustContentInsets={true}
-            initialListSize={1}
+            initialListSize={100}
             dataSource={this.state.dataSource}
             renderRow={this._renderRow}
             renderFooter={this._renderFooter}
