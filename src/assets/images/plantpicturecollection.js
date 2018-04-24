@@ -124,11 +124,11 @@ module.exports = {
         4: require('./plants/philodendron/4.png'),
         5: require('./plants/philodendron/5.png')
     },
-    hangingpepperplant: {
-        2: require('./plants/hangingpepperplant/2.png'),
-        3: require('./plants/hangingpepperplant/3.png'),
-        4: require('./plants/hangingpepperplant/4.png'),
-        5: require('./plants/hangingpepperplant/5.png')
+    hangingpepper: {
+        2: require('./plants/hangingpepper/2.png'),
+        3: require('./plants/hangingpepper/3.png'),
+        4: require('./plants/hangingpepper/4.png'),
+        5: require('./plants/hangingpepper/5.png')
     },
     bonsaitree: {
         2: require('./plants/bonsaitree/2.png'),
@@ -282,7 +282,7 @@ module.exports = {
         succulent: require('./plants/succulent.png'), 
         mint: require('./plants/mint.png'),
         philodendron: require('./plants/philodendron.png'),
-        hangingpepperplant: require('./plants/hangingpepperplant.png'),
+        hangingpepper: require('./plants/hangingpepper.png'),
         bonsaitree: require('./plants/bonsaitree.png'),
         invictusplant: require('./plants/invictusplant.png'),
         paperwhites: require('./plants/paperwhites.png'),

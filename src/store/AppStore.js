@@ -231,7 +231,7 @@ class AppStore {
   }
 
   pluck = (planterId, userRef) => {
-    let planterRef = userRef.child('planters').child(planterId)
+    let planterRef = userRef.child('planters').child(planterId);
 
     userRef.once('value')
       .then(res => res.val())

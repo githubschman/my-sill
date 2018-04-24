@@ -335,11 +335,11 @@ export default class WindowSill extends Component {
     let today = new Date();
     let id = this.state.selectedPlanter.id;
     let planterRef = this.userRef.child('planters').child(id);
-
     this.setState({showInventory: false})
+
     if (item.type === "mystery") {
       this.plantMysterySeed();
-      decreaseInventory(item, this.store, this.userRef);
+      setTimeout(() => decreaseInventory(item, this.store, this.userRef), 100);
     } else if (item.type === 'seed') {     
       let totalGrowTime = item.total_time;
       let stageArr = createStageArr(today.getTime(), totalGrowTime / 5);
@@ -347,11 +347,10 @@ export default class WindowSill extends Component {
       this.setState({notRecentlyPlanted: false, tempPlant: {name: item.name, stage: 1, id: this.state.selectedPlanter.id, best_sun: item.best_sun, high: item.high, low: item.low}});
       let newItem = setUpPlant(stageArr, item, today, false);
       planterRef.update({currentPlant: newItem});
-      decreaseInventory(item, this.store, this.userRef);
+      setTimeout(() => decreaseInventory(item, this.store, this.userRef), 100);
     } 
     
     else if (item.type === 'fertilizer') {
-      decreaseInventory(item, this.store, this.userRef)
       this.userRef.child('planters').child(id).once('value')
       .then(res => res.val())
       // .then(planter => planter.currentPlant.level_req <= item.level_req && planter.currentPlant.stage !== 'dead')
@@ -365,9 +364,17 @@ export default class WindowSill extends Component {
             newStageTimes.push(Math.floor(oldTime - percentDecrease));
           });
           
+          this.state.allSounds.hoeSound.setVolume(10.0);
+          this.state.allSounds.hoeSound.play((success) => {
+            if (success) {
+              console.log('successfully finished playing');
+            }
+          });
+
           let updatedPlant = Object.assign({}, this.state.selectedPlanter.currentPlant || this.state.tempPlant, {stage_times: newStageTimes})
-          planterRef.update({currentPlant: updatedPlant})
           this.setState({selectedPlanter: {id: id, currentPlant: updatedPlant}, tempPlanter: {id: planterId}})
+          planterRef.update({currentPlant: updatedPlant})
+          setTimeout(() => decreaseInventory(item, this.store, this.userRef), 100)
         }  
       })
       .catch(console.error);
@@ -549,9 +556,12 @@ export default class WindowSill extends Component {
       let dirt = pix.wetDirt;
       let timeTill = ''
 
-      if (this.state.singlePlant) {
-        let time = this.getHoursTillNextStage()
-        timeTill = time < 2 ? `${time} hour until next stage` : `${time} hours until next stage`;
+      if (this.state.singlePlant && plant.name && plant.name.length > 0 && plant.stage !== 'dead') {
+        let time = this.getHoursTillNextStage();
+        if (time < 0) {
+          time = 0;
+        }
+        timeTill = time === 1 ? `${time} hour until next stage` : `${time} hours until next stage`;
       }
   
       if (!this.state.watered) {
