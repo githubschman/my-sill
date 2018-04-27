@@ -11,7 +11,8 @@ import {
   UIManager,
   Picker,
   Button,
-  Image
+  Image,
+  Dimensions
 } from 'react-native'
 import _ from 'lodash'
 import moment from 'moment'
@@ -49,6 +50,19 @@ export default class SeedShop extends Component {
     this.uid = this.props.appStore.user.uid;
     this.userRef = firebaseApp.database().ref('/users/' + this.uid);
     this.itemRef = firebaseApp.database().ref('/users/' + this.uid + '/user_inventory');
+    this.styles = styles;
+
+    this.styles = styles;
+
+    let d = Dimensions.get('window');
+    const { height, width } = d;
+    
+    let isSmall = (height < 650) && !(height === 812 || width === 812) ? true : false;
+
+    if (isSmall) {
+      this.styles = smallStyles;
+    }
+
   }
 
   componentDidMount() {
@@ -135,13 +149,13 @@ export default class SeedShop extends Component {
     if (this.props.appStore.user_level >= item.level_req - 1) {
       return (
         <TouchableOpacity onPress={() => this._moreInfo(item)}>
-        <View style={styles.card}>
-        <Text style={styles.title}>{ item.name }</Text>
+        <View style={this.styles.card}>
+        <Text style={this.styles.title}>{ item.name }</Text>
             {item.type === "seed" && item.name !== "Mystery" ? 
-            <Image source={seedPics[item.id%(seedPics.length)]} style={styles.seedImage}/> :
-            <Image source={pix[item.type]} style={styles.seedImage}/> }
-            <Text style={styles.info}>Cost: {item.price} g</Text>
-            <Text style={styles.info}>Level {item.level_req} required</Text>
+            <Image source={seedPics[item.id%(seedPics.length)]} style={this.styles.seedImage}/> :
+            <Image source={pix[item.type]} style={this.styles.seedImage}/> }
+            <Text style={this.styles.info}>Cost: {item.price} g</Text>
+            <Text style={this.styles.info}>Level {item.level_req} required</Text>
             </View>
         </TouchableOpacity>
       )
@@ -164,8 +178,8 @@ export default class SeedShop extends Component {
       let text = this.truncate(item.name, item.amount)
       return (
         <TouchableOpacity>
-          <View style={styles.inventoryCard}>
-          <Text style={styles.inventory}>{text}</Text>
+          <View style={this.styles.inventoryCard}>
+          <Text style={this.styles.inventory}>{text}</Text>
         </View>
         </TouchableOpacity>
       )
@@ -196,8 +210,8 @@ export default class SeedShop extends Component {
   
   _renderFooter = () => {
       return (
-        <View style={styles.waitView}>
-          <Text style={styles.info}> Level up to see more seeds! </Text>
+        <View style={this.styles.waitView}>
+          <Text style={this.styles.info}> Level up to see more seeds! </Text>
         </View>
       )
   }
@@ -231,22 +245,22 @@ export default class SeedShop extends Component {
     let purchaseFor = "Purchase For " + this.state.selectedItem.price * this.state.amount + 'g';
 
     return (
-      <View style={!this.state.selectedItem.name ? styles.container : styles.itemContainer}>
-        <View style={styles.profileInfoContainer}>
-          <View style={styles.profileNameContainer}>
-            <Text style={styles.profileName}>
+      <View style={!this.state.selectedItem.name ? this.styles.container : this.styles.itemContainer}>
+        <View style={this.styles.profileInfoContainer}>
+          <View style={this.styles.profileNameContainer}>
+            <Text style={this.styles.profileName}>
               {!this.state.selectedItem.name ? 'SEED SHOP' : ''}
             </Text>
           </View>
           
           {!this.state.selectedItem.name ? <TouchableOpacity onPress={() => this.showInventory()}> 
-            <View style={styles.profileCountsContainer}>
-              {/* !this.state.show  ? <Image source={pix.infoUp} style={styles.infoButton}/> : <Image source={pix.infoDown} style={styles.infoButton}/> */}
+            <View style={this.styles.profileCountsContainer}>
+              {/* !this.state.show  ? <Image source={pix.infoUp} style={this.styles.infoButton}/> : <Image source={pix.infoDown} style={this.styles.infoButton}/> */}
             </View>
           </TouchableOpacity>
           : null}
-          <View style={styles.profileCountsContainer}>
-            <Text style={styles.profileCounts}>
+          <View style={this.styles.profileCountsContainer}>
+            <Text style={this.styles.profileCounts}>
               {this.state.userInfo.points} g
             </Text>
           </View>
@@ -254,7 +268,7 @@ export default class SeedShop extends Component {
 
         
         {this.state.ownInventory && this.state.show ? 
-          <View style={styles.profileCountsContainer}> 
+          <View style={this.styles.profileCountsContainer}> 
 
           <ListView
             automaticallyAdjustContentInsets={true}
@@ -267,42 +281,56 @@ export default class SeedShop extends Component {
         </View> : <View><Text></Text></View>}
 
         {this.state.selectedItem.name && !this.state.ownInventory && this.state.show ?
-          <View style={styles.profileCountsContainerSingle}>
-            <Text style={styles.title}> {this.state.selectedItem.name} </Text>
-            <Text style={styles.info}> {this.state.selectedItem.description} </Text>
+          <View style={this.styles.profileCountsContainerSingle}>
+            <Text style={this.styles.title}> {this.state.selectedItem.name} </Text>
+            <Text style={this.styles.info}> {this.state.selectedItem.description} </Text>
             {this.state.selectedItem.type === "seed" && this.state.selectedItem.name !== "mystery" ? 
-            <Text style={styles.water}> (Water every {this.state.selectedItem.survival} hours) </Text> : null}
+            <Text style={this.styles.water}> (Water every {this.state.selectedItem.survival} hours) </Text> : null}
             {this.state.selectedItem.type === "seed" && this.state.selectedItem.name !== "mystery"  ? 
-            <Image source={seedPics[this.state.selectedItem.id%(seedPics.length)]} style={styles.singleSeedImage}/> :
-            <Image source={pix[this.state.selectedItem.type]} style={styles.singleSeedImage}/> }
+            <Image source={seedPics[this.state.selectedItem.id%(seedPics.length)]} style={this.styles.singleSeedImage}/> :
+            <Image source={pix[this.state.selectedItem.type]} style={this.styles.singleSeedImage}/> }
             
-            
-            { this.state.selectedItem.level_req > this.props.appStore.user_level ? 
-                <Text style={styles.info}> Level {this.state.selectedItem.level_req} required!</Text> :
-              <View style={styles.center}>
-                <TouchableOpacity onPress={() => this.setState({amount: this.state.amount + 1})}>
-                  <Image source={pix.infoUp} style={styles.picker}/>
-                </TouchableOpacity>
-                <Text style={styles.amount}> {this.state.amount < 10 ? '0' + this.state.amount : this.state.amount} </Text>
-                <TouchableOpacity onPress={() => this.state.amount > 1 ? this.setState({amount: this.state.amount - 1}) : null}>
-                  <Image source={pix.infoDown} style={styles.picker}/>
-                </TouchableOpacity>
-              </View>   
-                
-            }
-
             { this.props.appStore.user_level >= this.state.selectedItem.level_req &&
               this.state.userInfo.points >= this.state.selectedItem.price * this.state.amount ?
 
-              <View>
-                <TouchableOpacity style={styles.button} onPress={() => this.purchase()}>
-                  <Text style={styles.buttonText}> {purchaseFor} </Text>
+              <View style={this.styles.flexTwo}>
+
+              <TouchableOpacity style={this.styles.button} onPress={() => this.purchase()}>
+                <Text style={this.styles.buttonText}> {purchaseFor} </Text>
+              </TouchableOpacity>
+              
+              { this.state.selectedItem.level_req > this.props.appStore.user_level ? 
+                <Text style={this.styles.info}> Level {this.state.selectedItem.level_req} required!</Text> :
+              <View style={this.styles.center}>
+                <TouchableOpacity onPress={() => this.setState({amount: this.state.amount + 1})}>
+                  <Image source={pix.infoUp} style={this.styles.picker}/>
                 </TouchableOpacity>
+                <Text style={this.styles.amount}> {this.state.amount < 10 ? '0' + this.state.amount : this.state.amount} </Text>
+                <TouchableOpacity onPress={() => this.state.amount > 1 ? this.setState({amount: this.state.amount - 1}) : null}>
+                  <Image source={pix.infoDown} style={this.styles.picker}/>
+                </TouchableOpacity>
+              </View>}
               </View>
-            :            
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}> { this.props.appStore.user_level < this.state.selectedItem.level_req ? 'Lvl ' + this.state.selectedItem.level_req + ' Required!' : 'Need More Gold!'} </Text>
-            </TouchableOpacity> }   
+            :
+            <View style={this.styles.flexTwo}>            
+              <TouchableOpacity style={this.styles.button}>
+                <Text style={this.styles.buttonText}> { this.props.appStore.user_level < this.state.selectedItem.level_req ? 'Lvl ' + this.state.selectedItem.level_req + ' Required!' : 'Need More Gold!'} </Text>
+              </TouchableOpacity> 
+
+
+              { this.state.selectedItem.level_req > this.props.appStore.user_level ? 
+                <Text style={this.styles.info}></Text> :
+              <View style={this.styles.center}>
+                <TouchableOpacity onPress={() => this.setState({amount: this.state.amount + 1})}>
+                  <Image source={pix.infoUp} style={this.styles.picker}/>
+                </TouchableOpacity>
+                <Text style={this.styles.amount}> {this.state.amount < 10 ? '0' + this.state.amount : this.state.amount} </Text>
+                <TouchableOpacity onPress={() => this.state.amount > 1 ? this.setState({amount: this.state.amount - 1}) : null}>
+                  <Image source={pix.infoDown} style={this.styles.picker}/>
+                </TouchableOpacity>
+              </View>}
+              
+            </View>}   
             
 
           </View> :  
@@ -321,6 +349,12 @@ export default class SeedShop extends Component {
 }
 
 const styles = StyleSheet.create({
+  flexTwo: {
+    flex: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent:'center'
+  },
   container: {
     flex: 1,
     backgroundColor: '#7DAFA3'
@@ -333,17 +367,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
+    alignItems: 'center',
+    justifyContent:'center',
     bottom: 0,
-    marginBottom: 20,
     backgroundColor: '#005c50',
-    borderRadius: 20,
     flexDirection: 'row',
+    height: 50,
+    width: 250
   },
   buttonText: {
     color: '#fff',
     fontFamily: 'Press Start 2P',
-    fontSize: 15,
-    padding: 20
+    fontSize: 12,
+    padding: 10
   },
   goBack: {
     color: '#fff',
@@ -372,14 +408,12 @@ const styles = StyleSheet.create({
   profileCountsContainerSingle: {
     flex: 1,
     alignItems: 'center',
-    paddingBottom: 5,
     backgroundColor: '#8fc9bb'
   },
   profileCountsContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: 5,
     backgroundColor: '#8fc9bb'
   },
   profileCounts: {
@@ -410,7 +444,6 @@ const styles = StyleSheet.create({
     flex: 1,
     borderBottomWidth: 1,
     borderColor: '#628980',
-    margin: 2,
     alignItems: 'center',
   },
   inventoryCard: {
@@ -453,7 +486,7 @@ const styles = StyleSheet.create({
   amount: {
     textAlign: 'center',
     fontFamily: 'Pxlvetica',
-    fontSize: 30,
+    fontSize: 20,
     paddingRight: 5,
     color: '#fff'
   },
@@ -469,6 +502,158 @@ const styles = StyleSheet.create({
   unavailable: {
     opacity: 0.4
   }
-})
+});
 
-//    fontFamily: 'PressStart2P',
+const smallStyles = StyleSheet.create({
+  flexTwo: {
+    flex: 2,
+    flexDirection: 'row'
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#7DAFA3'
+  },
+  itemContainer: {
+    flex: 1,
+    backgroundColor: '#8fc9bb'
+  },
+  center: {
+    alignItems: 'center',
+  },
+  button: {
+    alignItems: 'center',
+    justifyContent:'center',
+    bottom: 0,
+    backgroundColor: '#005c50',
+    flexDirection: 'row',
+    height: 50,
+    width: 250
+  },
+  buttonText: {
+    color: '#fff',
+    fontFamily: 'Press Start 2P',
+    fontSize: 12,
+    padding: 10
+  },
+  goBack: {
+    color: '#fff',
+    fontFamily: 'Press Start 2P',
+    fontSize: 15,
+  },
+  profileInfoContainer: {
+    flexDirection: 'row',
+    height: 65,
+    margin: 3,
+    borderRadius: 2,
+    backgroundColor: '#8fc9bb'
+  },
+  profileNameContainer: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    color: '#fff'
+  },
+  profileName: {
+    marginLeft: 10,
+    fontSize: 12,
+    fontFamily: 'Press Start 2P',
+    color: '#fff',
+  },
+  profileCountsContainerSingle: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#8fc9bb'
+  },
+  profileCountsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#8fc9bb'
+  },
+  profileCounts: {
+    fontFamily: 'Press Start 2P',
+    fontSize: 12,
+    color: '#fff'
+  },
+  seedImage: {
+    width: 300,
+    height: 300
+  },
+  singleSeedImage: {
+    width: 200,
+    height: 200
+  },
+  countsName: {
+    fontSize: 10,
+    fontFamily: 'Press Start 2P',
+    color: '#ffffff'
+  },
+  waitView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 100,
+  },
+  card: {
+    flex: 1,
+    borderBottomWidth: 1,
+    borderColor: '#628980',
+    alignItems: 'center',
+  },
+  inventoryCard: {
+    flex: 1,
+    borderBottomWidth: 5,
+    borderColor: '#8fc9bb',
+    margin: 2,
+    alignItems: 'center',
+  },
+  infoButton: {
+    height: 30,
+    width: 30
+  },
+  title: {
+    fontFamily: 'Pxlvetica',
+    textAlign: 'center',
+    fontSize: 35,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  inventory: {
+    fontFamily: 'Press Start 2P',
+    color: '#fff',
+    fontSize: 12,
+  },
+  info: {
+    padding: 3,
+    textAlign: 'center',
+    fontFamily: 'Pxlvetica',
+    fontSize: 20,
+    color: '#fff'
+  },
+  water: {
+    padding: 0,
+    textAlign: 'center',
+    fontFamily: 'Pxlvetica',
+    fontSize: 12,
+    color: '#fff'
+  },
+  amount: {
+    textAlign: 'center',
+    fontFamily: 'Pxlvetica',
+    fontSize: 16,
+    paddingRight: 5,
+    color: '#fff'
+  },
+  picker: {
+    height: 30,
+    width: 30,
+    alignItems: 'center'
+  },
+  pickerText: {
+    fontFamily: 'Pxlvetica',
+    color: '#fff',
+  },
+  unavailable: {
+    opacity: 0.4
+  }
+});

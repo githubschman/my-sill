@@ -12,6 +12,7 @@ import {
   UIManager,
   Image,
   Alert,
+  Dimensions,
   InteractionManager,
 } from 'react-native';
 // backgrounds:
@@ -64,7 +65,22 @@ export default class WindowSill extends Component {
       songIsPlaying: false,
       allSounds: {}
     }
-    
+
+    this.styles = styles;
+
+    let d = Dimensions.get('window');
+    const { height, width } = d;
+    let isSmall = (height < 650) && !(height === 812 || width === 812) ? true : false;
+    let isX = (height === 812 || width === 812) ? true : false;
+
+    if (isX) {
+      this.styles = bigStyles;
+    }
+
+    if (isSmall) {
+      this.styles = smallStyles;
+    }
+
     this.store = this.props.appStore
     this.uid = this.store.user.uid
     this.userRef = firebaseApp.database().ref('/users/' + this.uid)
@@ -252,12 +268,14 @@ export default class WindowSill extends Component {
       this.setState({watered: false})
     }
 
-    this.state.allSounds.waterSound.setVolume(10.0);
-    this.state.allSounds.waterSound.play((success) => {
-      if (success) {
-        console.log('successfully finished playing');
-      }
-    });
+    if (this.state.allSounds.waterSound.getVolume() > 0) {
+      this.state.allSounds.waterSound.setVolume(10.0);
+      this.state.allSounds.waterSound.play((success) => {
+        if (success) {
+          console.log('successfully finished playing');
+        }
+      });
+    }
   }
 
   componentWillReceiveProps() {
@@ -364,12 +382,14 @@ export default class WindowSill extends Component {
             newStageTimes.push(Math.floor(oldTime - percentDecrease));
           });
           
-          this.state.allSounds.hoeSound.setVolume(10.0);
-          this.state.allSounds.hoeSound.play((success) => {
-            if (success) {
-              console.log('successfully finished playing');
-            }
-          });
+          if (this.state.allSounds.hoeSound.getVolume() > 0) {
+            this.state.allSounds.hoeSound.setVolume(10.0);
+            this.state.allSounds.hoeSound.play((success) => {
+              if (success) {
+                console.log('successfully finished playing');
+              }
+            });
+          }
 
           let updatedPlant = Object.assign({}, this.state.selectedPlanter.currentPlant || this.state.tempPlant, {stage_times: newStageTimes})
           this.setState({selectedPlanter: {id: id, currentPlant: updatedPlant}, tempPlanter: {id: planterId}})
@@ -393,12 +413,14 @@ export default class WindowSill extends Component {
           this.setState({selectedPlanter: emptyPlant});
           planterRef.update({hoed: false, currentPlant: new Planter(planterId)});
         }
-        this.state.allSounds.hoeSound.setVolume(10.0);
-        this.state.allSounds.hoeSound.play((success) => {
-          if (success) {
-            console.log('successfully finished playing');
-          }
-        });
+        if (this.state.allSounds.hoeSound.getVolume() > 0){
+          this.state.allSounds.hoeSound.setVolume(10.0);
+          this.state.allSounds.hoeSound.play((success) => {
+            if (success) {
+              console.log('successfully finished playing');
+            }
+          });
+        }
       })
       .catch(console.error);
     }
@@ -426,18 +448,18 @@ export default class WindowSill extends Component {
     let wholeTitle = itemTitle + seedtxt + amt;
     if (item.name && (item.amount >= 1)) {
       return (
-        <View style={styles.card}>
-         <Text style={styles.title}>{wholeTitle}</Text>
+        <View style={this.styles.card}>
+         <Text style={this.styles.title}>{wholeTitle}</Text>
           <TouchableOpacity onPress={()=> this.plantSeed(item, (planter.id))}>
-            {item.type === 'fertilizer' && (singlePlant && planter.currentPlant.name && planter.currentPlant.stage < 5 ) ? <Text style={styles.toolVerb}> use </Text> : null}
-            {(item.type === 'seed' || item.type === "mystery") && singlePlant && !planter.currentPlant.name && this.state.notRecentlyPlanted && planter.hoed ? <Text style={styles.toolVerb}> plant seed </Text> : null}
-            {item.type === 'tool' && (planter.currentPlant && planter.currentPlant.stage === 'dead') || item.type === 'tool' && singlePlant && !planter.currentPlant.name && this.state.notRecentlyPlanted && !planter.hoed ? <Text style={styles.toolVerb}> use tool </Text> : null}
+            {item.type === 'fertilizer' && (singlePlant && planter.currentPlant.name && planter.currentPlant.stage < 5 ) ? <Text style={this.styles.toolVerb}> use </Text> : null}
+            {(item.type === 'seed' || item.type === "mystery") && singlePlant && !planter.currentPlant.name && this.state.notRecentlyPlanted && planter.hoed ? <Text style={this.styles.toolVerb}> plant seed </Text> : null}
+            {item.type === 'tool' && (planter.currentPlant && planter.currentPlant.stage === 'dead') || item.type === 'tool' && singlePlant && !planter.currentPlant.name && this.state.notRecentlyPlanted && !planter.hoed ? <Text style={this.styles.toolVerb}> use tool </Text> : null}
           </TouchableOpacity>
         
-        {item.name === 'Hoe' ? <View style={styles.card}>
-          <Text style={styles.title}>WATERING CAN</Text>
+        {item.name === 'Hoe' ? <View style={this.styles.card}>
+          <Text style={this.styles.title}>WATERING CAN</Text>
           <TouchableOpacity onPress={() => this.state.singlePlant && (this.state.selectedPlanter.currentPlant.name || this.state.tempPlant.name) ? this.waterPlant(this.state.selectedPlanter.id) : <Text></Text>}>
-          {this.state.singlePlant && this.state.selectedPlanter.hoed ? <Text style={styles.toolVerb}>water plant</Text> : null}
+          {this.state.singlePlant && this.state.selectedPlanter.hoed ? <Text style={this.styles.toolVerb}>water plant</Text> : null}
           </TouchableOpacity> 
         </View> : null}
       </View>
@@ -445,7 +467,7 @@ export default class WindowSill extends Component {
     } else return (
       <View>
       <TouchableOpacity>
-        {item.type === 'tool' ? <Text style={styles.title}>{item.name.toUpperCase()} x{item.amount}</Text> : null}
+        {item.type === 'tool' ? <Text style={this.styles.title}>{item.name.toUpperCase()} x{item.amount}</Text> : null}
       </TouchableOpacity>
       </View>)
     }
@@ -474,12 +496,12 @@ export default class WindowSill extends Component {
       if (planter && planter.currentPlant && planter.currentPlant.name) {
         return (
           <TouchableOpacity onPress={() => {this.timer(planter.id), this.setState({selectedPlanter: planter, singlePlant: true, message: null})}}>
-          <View style={styles.item}>
+          <View style={this.styles.item}>
           {plant && plantName && plant.stage && plant.stage !== 'dead' && plant.stage > 1 ?  
-            <Image source={pix[plantName][plant.stage]} style={styles.planterPlant}/>
+            <Image source={pix[plantName][plant.stage]} style={this.styles.planterPlant}/>
             : null}
-          <Image source={dirt} style={styles.planterDirt}/>
-          <Image source={planterPic} style={styles.planterPlanter}/>
+          <Image source={dirt} style={this.styles.planterDirt}/>
+          <Image source={planterPic} style={this.styles.planterPlanter}/>
           </View>
           </TouchableOpacity>
         )
@@ -487,9 +509,9 @@ export default class WindowSill extends Component {
       else {
         return (
           <TouchableOpacity onPress={() => this.goToEmpty(planter)}>
-          <View style={styles.item}>
-          <Image source={dirt} style={styles.planterDirt}/>
-          <Image source={planterPic} style={styles.planterPlanter}/>
+          <View style={this.styles.item}>
+          <Image source={dirt} style={this.styles.planterDirt}/>
+          <Image source={planterPic} style={this.styles.planterPlanter}/>
           </View>
           </TouchableOpacity>
         )
@@ -558,8 +580,10 @@ export default class WindowSill extends Component {
 
       if (this.state.singlePlant && plant.name && plant.name.length > 0 && plant.stage !== 'dead') {
         let time = this.getHoursTillNextStage();
-        if (time < 0) {
-          time = 0;
+        if (time <= 0) {
+          time = 1;
+        } else {
+          time = time + 1;
         }
         timeTill = time === 1 ? `${time} hour until next stage` : `${time} hours until next stage`;
       }
@@ -573,35 +597,35 @@ export default class WindowSill extends Component {
       
       if(this.state.connected){
         return (
-          <View style={styles.container}>
+          <View style={this.styles.container}>
   
             {/* windowsill and background pics */}
-            {!this.state.singlePlant ? <Image source={windowsill}  style={styles.sill}/> : <Text></Text>}
-            {!this.state.singePlant ? <Image source={pix.pipePic} style={styles.pipe}/> : <Text></Text> } 
+            {!this.state.singlePlant ? <Image source={windowsill}  style={this.styles.sill}/> : <Text></Text>}
+            {!this.state.singePlant ? <Image source={pix.pipePic} style={this.styles.pipe}/> : <Text></Text> } 
             {!this.state.singlePlant ? <BackgroundImage/> : <SingleBackgroundImage />}
   
             {/* single plant and planters view */}
             {this.state.singlePlant ? 
-              <View style={styles.singlePlantContainer}>
+              <View style={this.styles.singlePlantContainer}>
 
               {plant && plantName && plant.stage && plant.stage !== 'dead' && plant.stage > 1 ?  
-              <Image source={pix[plantName][plant.stage]} style={styles.singlePlant}/>
+              <Image source={pix[plantName][plant.stage]} style={this.styles.singlePlant}/>
               : null}
-                <Image source={dirt} style={styles.singlePlantDirt} />
-                <Image source={planterPic} style={styles.singlePlantPlanter} />
-                <Image source={windowsill}  style={styles.sillClose}/>
+                <Image source={dirt} style={this.styles.singlePlantDirt} />
+                <Image source={planterPic} style={this.styles.singlePlantPlanter} />
+                <Image source={windowsill}  style={this.styles.sillClose}/>
                 {this.state.tempPlant.name || currentPlant.name ?
-                <TouchableOpacity style={styles.plantInfoButton} onPress={() => this.setState({toggleInfo: !this.state.toggleInfo, wateringCan: !this.state.wateringCan})}> 
-                  {!this.state.toggleInfo ? <Text style={styles.showinfo}>info</Text> : <Image source={pix.infoDown} style={styles.arrow}/>}
+                <TouchableOpacity style={this.styles.plantInfoButton} onPress={() => this.setState({toggleInfo: !this.state.toggleInfo, wateringCan: !this.state.wateringCan})}> 
+                  {!this.state.toggleInfo ? <Text style={this.styles.showinfo}>info</Text> : <Image source={pix.infoDown} style={this.styles.arrow}/>}
                 </TouchableOpacity> : <Text></Text>
                 }
 
-                  {(this.state.tempPlant.name || currentPlant.name) && this.state.toggleInfo ? <View style={styles.plantInfo} > 
-                  {this.showPlantName(currentPlant, this.state.tempPlant) ? <Text style={styles.plantTitle}> {(currentPlant.name || this.state.tempPlant.name)}  </Text>  : <Text style={styles.plantTitle}> ??? </Text>}
-                    {currentPlant.stage === 'dead' ? <Text style={styles.info}> dead :( </Text> : <Text style={styles.info}> stage {currentPlant.stage || this.state.tempPlant.stage} </Text>}
-                    <Text style={styles.info}> likes: {(currentPlant.high+currentPlant.low)/2 || (this.state.tempPlant.high + this.state.tempPlant.low)/2}° {currentPlant.best_sun || this.state.tempPlant.best_sun} </Text>
-                    {this.store.idealWeather[this.state.selectedPlanter.id] === true ? <Text style={styles.info}> ideal weather! </Text> : <Text></Text>} 
-                    {currentPlant.stage === 5 ? <TouchableOpacity style={styles.button} onPress={() => this.pluck()}><Text style={styles.info}> sell for {currentPlant.sell_val || this.state.tempPlant.sell_val}g </Text></TouchableOpacity> : <Text style={styles.time}>{timeTill}</Text> }
+                  {(this.state.tempPlant.name || currentPlant.name) && this.state.toggleInfo ? <View style={this.styles.plantInfo} > 
+                  {this.showPlantName(currentPlant, this.state.tempPlant) ? <Text style={this.styles.plantTitle}> {(currentPlant.name || this.state.tempPlant.name)}  </Text>  : <Text style={this.styles.plantTitle}> ??? </Text>}
+                    {currentPlant.stage === 'dead' ? <Text style={this.styles.info}> dead :( </Text> : <Text style={this.styles.info}> stage {currentPlant.stage || this.state.tempPlant.stage} </Text>}
+                    <Text style={this.styles.info}> likes: {(currentPlant.high+currentPlant.low)/2 || (this.state.tempPlant.high + this.state.tempPlant.low)/2}° {currentPlant.best_sun || this.state.tempPlant.best_sun} </Text>
+                    {this.store.idealWeather[this.state.selectedPlanter.id] === true ? <Text style={this.styles.info}> ideal weather! </Text> : <Text></Text>} 
+                    {currentPlant.stage === 5 ? <TouchableOpacity style={this.styles.button} onPress={() => this.pluck()}><Text style={this.styles.info}> sell for {currentPlant.sell_val || this.state.tempPlant.sell_val}g </Text></TouchableOpacity> : <Text style={this.styles.time}>{timeTill}</Text> }
                     </View> : <Text></Text>}
                 
       
@@ -610,7 +634,7 @@ export default class WindowSill extends Component {
             :
             
             <ListView
-                contentContainerStyle={styles.list}
+                contentContainerStyle={this.styles.list}
                 automaticallyAdjustContentInsets={false}
                 dataSource={this.state.planters}
                 renderRow={this.renderPlanters}
@@ -619,11 +643,11 @@ export default class WindowSill extends Component {
               
             }
   
-            {/* !this.state.singlePlant ? <Image source={pix.outlet} style={styles.outlet}/> :  <View></View> */}
-            <View style={styles.inventoryBorder}></View>
+            {/* !this.state.singlePlant ? <Image source={pix.outlet} style={this.styles.outlet}/> :  <View></View> */}
+            <View style={this.styles.inventoryBorder}></View>
             { this.state.showInventory ?
-              <View style={styles.showInventory}>
-                <TouchableOpacity style={styles.showInventory} onPress={() => this.setState({showInventory: !this.state.showInventory})}><Text style={styles.x}>x</Text></TouchableOpacity>
+              <View style={this.styles.showInventory}>
+                <TouchableOpacity style={this.styles.showInventory} onPress={() => this.setState({showInventory: !this.state.showInventory})}><Text style={this.styles.x}>x</Text></TouchableOpacity>
                 <ListView
                   automaticallyAdjustContentInsets={true}
                   initialListSize={10}
@@ -633,20 +657,20 @@ export default class WindowSill extends Component {
                 />
               </View>
               : 
-              <TouchableOpacity style={styles.showInventory} onPress={() => this.setState({showInventory: !this.state.showInventory})}><Text style={styles.arrowText}>inventory</Text></TouchableOpacity>}
+              <TouchableOpacity style={this.styles.showInventory} onPress={() => this.setState({showInventory: !this.state.showInventory})}><Text style={this.styles.arrowText}>inventory</Text></TouchableOpacity>}
             </View>
         );
       } else {
-        return (<View style={styles.errorcontainer}> 
+        return (<View style={this.styles.errorcontainer}> 
             <Image source={pix.wifi}/> 
-            <Text style={styles.needsWifiTitle}>These plants need the internet to grow!</Text>
-            <Text style={styles.needsWifi}>Connect to WiFi or venture into an area with service.</Text>
+            <Text style={this.styles.needsWifiTitle}>These plants need the internet to grow!</Text>
+            <Text style={this.styles.needsWifi}>Connect to WiFi or venture into an area with service.</Text>
           </View>)
       }
     }
   }
-  
-  const styles = StyleSheet.create({
+
+  const smallStyles = StyleSheet.create({
     container: {
       flex: 2,
       justifyContent: 'center'
@@ -679,13 +703,13 @@ export default class WindowSill extends Component {
     },
     title: {
       fontFamily: 'Press Start 2P',
-      fontSize: 16,
+      fontSize: 10,
       fontWeight: '800',
       padding: 5,
       color: '#fff',
     },
     plantTitle: {
-      fontSize: 20,
+      fontSize: 16,
       fontWeight: '800',
       color: '#005c50',
       fontFamily: 'Press Start 2P',
@@ -693,21 +717,21 @@ export default class WindowSill extends Component {
       paddingBottom: 5
     },
     arrowText: {
-      fontSize: 16,
+      fontSize: 12,
       fontWeight: '800',
       color: '#005c50',
       fontFamily: 'Press Start 2P', 
       padding: 5
     },
     x: {
-      fontSize: 20,
+      fontSize: 10,
       fontWeight: '800',
       color: '#005c50',
       fontFamily: 'Press Start 2P',
       padding: 2
     },
     toolVerb: {
-      fontSize: 12,
+      fontSize: 10,
       color: '#fff',
       fontFamily: 'Press Start 2P',
       backgroundColor: '#005c50',
@@ -716,7 +740,7 @@ export default class WindowSill extends Component {
       textAlign: 'center',
     },
     showinfo: {
-      fontSize: 12,
+      fontSize: 10,
       color: '#fff',
       fontFamily: 'Press Start 2P',
       backgroundColor: '#005c50',
@@ -748,7 +772,7 @@ export default class WindowSill extends Component {
     arrow: {
       height: 30,
       width: 30,
-      fontSize: 12,
+      fontSize: 10,
       fontWeight: '800',
       color: '#005c50',
       fontFamily: 'Press Start 2P',
@@ -756,7 +780,7 @@ export default class WindowSill extends Component {
     info: {
       fontFamily: 'Press Start 2P',
       color: '#fff',
-      fontSize: 15,
+      fontSize: 12,
       paddingBottom: 5
     },
     time: {
@@ -770,27 +794,17 @@ export default class WindowSill extends Component {
     bold: {
       fontWeight: 'bold',
     },
-    sill: {
-      height: 520,
-      width: 520,
-      zIndex: 0,
-      justifyContent:'center',
-      alignItems: 'center',
-      top: 10,
-      left: -60,
-      position: 'absolute'
-    },
     pipe: {
       zIndex: -1,
       position: 'absolute'
     },
     sillClose: {
-      height: 800,
-      width: 800,
+      height: 600,
+      width: 600,
       zIndex: 0,
       justifyContent:'center',
-      top: -140,
-      left: -195,
+      top: -145,
+      left: -150,
       position: 'absolute'
     },
     list: {
@@ -814,32 +828,42 @@ export default class WindowSill extends Component {
     },
     item: {
       margin: 10,
-      width: 70,
-      height: 150
+      width: 50,
+      height: 100
     },
-    planterPlant: {
-      left: -30,
+    sill: { ///// 
+      height: 450,
+      width: 450,
+      zIndex: 0,
+      justifyContent:'center',
+      alignItems: 'center',
+      top: 5,
+      right: -70,
+      position: 'absolute'
+    },
+    planterPlant: { ///
+      right: -30,
       position: 'absolute',
-      top: 60,
+      top: 20,
       zIndex: 3,
-      height: 140,
-      width: 140
+      height: 110,
+      width: 110
     },
-    planterDirt: {
-      left: -30,
+    planterDirt: { ///
+      right: -30,
       position: 'absolute',
-      top: 60,
+      top: 20,
       zIndex: 2,
-      height: 140,
-      width: 140
+      height: 110,
+      width: 110
     },
-    planterPlanter: {
-      left: -30,
+    planterPlanter: { ///
+      right: -30,
       position: 'absolute',
-      top: 60,
+      top: 20,
       zIndex: 1,
-      height: 140,
-      width: 140
+      height: 110,
+      width: 110
     },
     outlet: {
       height: 40,
@@ -856,11 +880,11 @@ export default class WindowSill extends Component {
     },
     singlePlant: {
       position: 'absolute',
-      top: 190,
-      left: 10,
+      top: 95,
+      right: 15,
       zIndex: 5,
-      height: 400,
-      width: 400
+      height: 300,
+      width: 300
     },
     showInventory: {
       backgroundColor: '#8fc9bb',
@@ -871,22 +895,22 @@ export default class WindowSill extends Component {
     },
     singlePlantDirt: {
       position: 'absolute',
-      top: 190,
-      left: 10,
+      top: 95,
+      right: 15,
       zIndex: 4,
-      height: 400,
-      width: 400
+      height: 300,
+      width: 300
     },
     singlePlantPlanter: {
       position: 'absolute',
-      top: 190,
-      left: 10,
+      top: 95,
+      right: 15,
       zIndex: 3,
-      height: 400,
-      width: 400
+      height: 300,
+      width: 300
     },
     needsWifi: {
-      padding: 10,
+      padding: 5,
       textAlign: 'center',
       fontSize: 20,
       fontFamily: 'Pxlvetica',
@@ -899,4 +923,517 @@ export default class WindowSill extends Component {
       fontFamily: 'Press Start 2P',
       color: '#ffffff'
     }
-})
+  })
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 2,
+    justifyContent: 'center'
+  },
+  errorcontainer: {
+    flex: 1,
+    alignItems: 'center',
+    top: 100,
+    textAlign: 'center'
+  },
+  planter: {
+    flex: 4
+  },
+  waitView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 100,
+  },
+  card: {
+    flex: 1,
+    alignItems: 'center',
+    textAlign: 'center',
+    backgroundColor: '#8fc9bb'
+  },
+  wateringCan: {
+    alignItems: 'center',
+    textAlign: 'center',
+    backgroundColor: '#8fc9bb'
+  },
+  title: {
+    fontFamily: 'Press Start 2P',
+    fontSize: 16,
+    fontWeight: '800',
+    padding: 5,
+    color: '#fff',
+  },
+  plantTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#005c50',
+    fontFamily: 'Press Start 2P',
+    paddingTop: 10,
+    paddingBottom: 5
+  },
+  arrowText: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#005c50',
+    fontFamily: 'Press Start 2P', 
+    padding: 5
+  },
+  x: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#005c50',
+    fontFamily: 'Press Start 2P',
+    padding: 2
+  },
+  toolVerb: {
+    fontSize: 12,
+    color: '#fff',
+    fontFamily: 'Press Start 2P',
+    backgroundColor: '#005c50',
+    width: 200,
+    padding: 10,
+    textAlign: 'center',
+  },
+  showinfo: {
+    fontSize: 12,
+    color: '#fff',
+    fontFamily: 'Press Start 2P',
+    backgroundColor: '#005c50',
+    width: 100,
+    padding: 10,
+    margin: 5,
+    textAlign: 'center',
+  },
+  postInfo: {
+    padding: 3,
+    alignItems: 'center',
+  },
+  postButtons: {
+    padding: 5,
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+  },
+  button: {
+    flex: 3,
+    padding: 5,
+    margin: 6,
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: '#999',
+    alignItems: 'center',
+    backgroundColor: '#005c50',
+  },
+  arrow: {
+    height: 30,
+    width: 30,
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#005c50',
+    fontFamily: 'Press Start 2P',
+  },
+  info: {
+    fontFamily: 'Press Start 2P',
+    color: '#fff',
+    fontSize: 15,
+    paddingBottom: 5
+  },
+  time: {
+    alignItems: 'center',
+    paddingBottom: 10,
+    paddingLeft: 10,
+    fontFamily: 'Press Start 2P',
+    color: '#005c50',
+    fontSize: 10
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
+  sill: {
+    height: 520,
+    width: 520,
+    zIndex: 0,
+    justifyContent:'center',
+    alignItems: 'center',
+    top: 10,
+    left: -60,
+    position: 'absolute'
+  },
+  pipe: {
+    zIndex: -1,
+    position: 'absolute'
+  },
+  sillClose: {
+    height: 800,
+    width: 800,
+    zIndex: 0,
+    justifyContent:'center',
+    top: -155,
+    left: -195,
+    position: 'absolute'
+  },
+  list: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    top: 270,
+  },
+  plantInfo: {
+    zIndex: 100,
+    position: 'absolute',
+    top: 0,
+    right: 0
+  },
+  plantInfoButton: {
+    zIndex: 101,
+    position: 'absolute',
+    top: 0,
+    right: 0
+  },
+  item: {
+    margin: 10,
+    width: 70,
+    height: 150
+  },
+  planterPlant: {
+    left: -30,
+    position: 'absolute',
+    top: 60,
+    zIndex: 3,
+    height: 140,
+    width: 140
+  },
+  planterDirt: {
+    left: -30,
+    position: 'absolute',
+    top: 60,
+    zIndex: 2,
+    height: 140,
+    width: 140
+  },
+  planterPlanter: {
+    left: -30,
+    position: 'absolute',
+    top: 60,
+    zIndex: 1,
+    height: 140,
+    width: 140
+  },
+  outlet: {
+    height: 40,
+    width: 40,
+    bottom: 80,
+    right: 50,
+    position: 'absolute'
+  },
+  singlePlantContainer: {
+    flex: 1,
+    flexDirection:'row',
+    alignItems: 'center',
+    justifyContent:'center'
+  },
+  singlePlant: {
+    position: 'absolute',
+    top: 170,
+    left: -2,
+    zIndex: 5,
+    height: 400,
+    width: 400
+  },
+  showInventory: {
+    backgroundColor: '#8fc9bb',
+  },
+  inventoryBorder: {
+    backgroundColor: '#005c50',
+    height: 3
+  },
+  singlePlantDirt: {
+    position: 'absolute',
+    top: 170,
+    left: -2,
+    zIndex: 4,
+    height: 400,
+    width: 400
+  },
+  singlePlantPlanter: {
+    position: 'absolute',
+    top: 170,
+    left: -2,
+    zIndex: 3,
+    height: 400,
+    width: 400
+  },
+  needsWifi: {
+    padding: 10,
+    textAlign: 'center',
+    fontSize: 20,
+    fontFamily: 'Pxlvetica',
+    color: '#ffffff'
+  },
+  needsWifiTitle: {
+    padding: 10,
+    textAlign: 'center',
+    fontSize: 16,
+    fontFamily: 'Press Start 2P',
+    color: '#ffffff'
+  }
+});
+
+
+const bigStyles = StyleSheet.create({
+  container: {
+    flex: 2,
+    justifyContent: 'center'
+  },
+  errorcontainer: {
+    flex: 1,
+    alignItems: 'center',
+    top: 100,
+    textAlign: 'center'
+  },
+  planter: {
+    flex: 4
+  },
+  waitView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 100,
+  },
+  card: {
+    flex: 1,
+    alignItems: 'center',
+    textAlign: 'center',
+    backgroundColor: '#8fc9bb'
+  },
+  wateringCan: {
+    alignItems: 'center',
+    textAlign: 'center',
+    backgroundColor: '#8fc9bb'
+  },
+  title: {
+    fontFamily: 'Press Start 2P',
+    fontSize: 16,
+    fontWeight: '800',
+    padding: 5,
+    color: '#fff',
+  },
+  plantTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#005c50',
+    fontFamily: 'Press Start 2P',
+    paddingTop: 10,
+    paddingBottom: 5
+  },
+  arrowText: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#005c50',
+    fontFamily: 'Press Start 2P', 
+    padding: 5
+  },
+  x: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#005c50',
+    fontFamily: 'Press Start 2P',
+    padding: 2
+  },
+  toolVerb: {
+    fontSize: 12,
+    color: '#fff',
+    fontFamily: 'Press Start 2P',
+    backgroundColor: '#005c50',
+    width: 200,
+    padding: 10,
+    textAlign: 'center',
+  },
+  showinfo: {
+    fontSize: 12,
+    color: '#fff',
+    fontFamily: 'Press Start 2P',
+    backgroundColor: '#005c50',
+    width: 100,
+    padding: 10,
+    margin: 5,
+    textAlign: 'center',
+  },
+  postInfo: {
+    padding: 3,
+    alignItems: 'center',
+  },
+  postButtons: {
+    padding: 5,
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+  },
+  button: {
+    flex: 3,
+    padding: 5,
+    margin: 6,
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: '#999',
+    alignItems: 'center',
+    backgroundColor: '#005c50',
+  },
+  arrow: {
+    height: 30,
+    width: 30,
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#005c50',
+    fontFamily: 'Press Start 2P',
+  },
+  info: {
+    fontFamily: 'Press Start 2P',
+    color: '#fff',
+    fontSize: 15,
+    paddingBottom: 5
+  },
+  time: {
+    alignItems: 'center',
+    paddingBottom: 10,
+    paddingLeft: 10,
+    fontFamily: 'Press Start 2P',
+    color: '#005c50',
+    fontSize: 10
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
+  sill: {
+    height: 520,
+    width: 520,
+    zIndex: 0,
+    justifyContent:'center',
+    alignItems: 'center',
+    top: 30,
+    left: -60,
+    position: 'absolute'
+  },
+  pipe: {
+    zIndex: -1,
+    position: 'absolute'
+  },
+  sillClose: {
+    height: 800,
+    width: 800,
+    zIndex: 0,
+    justifyContent:'center',
+    top: -180,
+    left: -195,
+    position: 'absolute'
+  },
+  list: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    top: 270,
+  },
+  plantInfo: {
+    zIndex: 100,
+    position: 'absolute',
+    top: 0,
+    right: 0
+  },
+  plantInfoButton: {
+    zIndex: 101,
+    position: 'absolute',
+    top: 0,
+    right: 0
+  },
+  item: {
+    margin: 10,
+    width: 70,
+    height: 150
+  },
+  planterPlant: {
+    left: -30,
+    position: 'absolute',
+    top: 70,
+    zIndex: 3,
+    height: 140,
+    width: 140
+  },
+  planterDirt: {
+    left: -30,
+    position: 'absolute',
+    top: 70,
+    zIndex: 2,
+    height: 140,
+    width: 140
+  },
+  planterPlanter: {
+    left: -30,
+    position: 'absolute',
+    top: 70,
+    zIndex: 1,
+    height: 140,
+    width: 140
+  },
+  outlet: {
+    height: 40,
+    width: 40,
+    bottom: 80,
+    right: 50,
+    position: 'absolute'
+  },
+  singlePlantContainer: {
+    flex: 1,
+    flexDirection:'row',
+    alignItems: 'center',
+    justifyContent:'center'
+  },
+  singlePlant: {
+    position: 'absolute',
+    top: 150,
+    left: 1, // 
+    zIndex: 5,
+    height: 400,
+    width: 400
+  },
+  showInventory: {
+    backgroundColor: '#8fc9bb',
+    paddingBottom: 50
+  },
+  inventoryBorder: {
+    backgroundColor: '#005c50',
+    height: 3
+  },
+  singlePlantDirt: {
+    position: 'absolute',
+    top: 150,
+    left: 1,
+    zIndex: 4,
+    height: 400,
+    width: 400
+  },
+  singlePlantPlanter: {
+    position: 'absolute',
+    top: 150,
+    left: 1,
+    zIndex: 3,
+    height: 400,
+    width: 400
+  },
+  needsWifi: {
+    padding: 10,
+    textAlign: 'center',
+    fontSize: 20,
+    fontFamily: 'Pxlvetica',
+    color: '#ffffff'
+  },
+  needsWifiTitle: {
+    padding: 10,
+    textAlign: 'center',
+    fontSize: 16,
+    fontFamily: 'Press Start 2P',
+    color: '#ffffff'
+  }
+});

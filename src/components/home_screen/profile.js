@@ -10,7 +10,8 @@ import {
   Platform,
   UIManager,
   ProgressViewIOS,
-  Image
+  Image,
+  Dimensions
 } from 'react-native'
 import _ from 'lodash'
 import { firebaseApp } from '../../firebase'
@@ -43,6 +44,18 @@ const pix = require("../../assets/images/plantpicturecollection");
     }
     this.userRef = firebaseApp.database().ref('/users/' + this.props.appStore.user.uid)
     this.store = this.props.appStore;
+
+    this.styles = styles;
+
+    let d = Dimensions.get('window');
+    const { height, width } = d;
+    let isSmall = (height < 650) && !(height === 812 || width === 812) ? true : false;
+
+    if (isSmall) {
+      this.styles = smallStyles;
+    }
+
+
   }
 
   componentDidMount() {
@@ -96,7 +109,7 @@ const pix = require("../../assets/images/plantpicturecollection");
 
   _toggleMute = () => {
     this.store.mute = !this.store.mute;
-    let level = this.store.mute ? 0 : .5;
+    let level = this.store.mute ? 0 : 1;
     let allSounds = this.store.allSounds;
 
     for (let sound in allSounds) {
@@ -142,9 +155,9 @@ const pix = require("../../assets/images/plantpicturecollection");
       let plantName = plant.split(' ').join('').toLowerCase();
       return (
         <TouchableOpacity onPress={this.updateHOF}>
-          <View style={styles.hallOfFarmItem}>
-          <Text style={styles.item}>
-          {plant != 'grow some plants!' ? <Image style={styles.fullPlant} source={pix.fullplant[plantName]} /> : 'grow some plants!' } 
+          <View style={this.styles.hallOfFarmItem}>
+          <Text style={this.styles.item}>
+          {plant != 'grow some plants!' ? <Image style={this.styles.fullPlant} source={pix.fullplant[plantName]} /> : 'grow some plants!' } 
             </Text>
             </View>
             </TouchableOpacity>
@@ -159,9 +172,9 @@ const pix = require("../../assets/images/plantpicturecollection");
       let plantName = plant.split(' ').join('').toLowerCase();
       return (
         <TouchableOpacity onPress={this.updateHOF}>
-        <View style={styles.hallOfFarmItem}>
+        <View style={this.styles.hallOfFarmItem}>
             <View> 
-            { plant != 'grow some plants!' ? <View><Text style={styles.levelText}>{plant + ":"} {this.state.stats.plants[plant].amt} grown</Text></View> : <Text></Text>}
+            { plant != 'grow some plants!' ? <View><Text style={this.styles.levelText}>{plant + ":"} {this.state.stats.plants[plant].amt} grown</Text></View> : <Text></Text>}
             </View>
           </View>
           </TouchableOpacity>
@@ -174,28 +187,28 @@ const pix = require("../../assets/images/plantpicturecollection");
     
     render() {
       return (
-        <View style={styles.container}>
-          <View style={styles.profileInfoContainer}>
-            <View style={styles.profileNameContainer}>
-              <Text style={styles.profileName}>
+        <View style={this.styles.container}>
+          <View style={this.styles.profileInfoContainer}>
+            <View style={this.styles.profileNameContainer}>
+              <Text style={this.styles.profileName}>
                 {this.store.username}'s Sill 
               </Text>
             </View>
-            <View style={styles.profileCountsContainer}>
+            <View style={this.styles.profileCountsContainer}>
             </View>
-          <View style={styles.profileCountsContainer}>
+          <View style={this.styles.profileCountsContainer}>
             <TouchableOpacity onPress={this._logOut}>
-              <Text style={styles.logout}> Log Out </Text>
+              <Text style={this.styles.logout}> Log Out </Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.profileCountsContainer}>
+          <View style={this.styles.profileCountsContainer}>
             <TouchableOpacity onPress={this._toggleMute}>
-              <Text style={styles.logout}>{this.store.mute ? <Image style={styles.mute} source={pix.noSound} /> : <Image style={styles.mute} source={pix.sound} />}</Text>
+              <Text style={this.styles.logout}>{this.store.mute ? <Image style={this.styles.mute} source={pix.noSound} /> : <Image style={this.styles.mute} source={pix.sound} />}</Text>
             </TouchableOpacity>
           </View>
           </View>
-          <View style={styles.progressBar}>
-          <Text style={styles.levelText}>Level {this.store.user_level}</Text>
+          <View style={this.styles.progressBar}>
+          <Text style={this.styles.levelText}>Level {this.store.user_level}</Text>
             <ProgressViewIOS 
               progress={this.store.levelPercentage}
               trackTintColor={'#fff'}
@@ -204,19 +217,19 @@ const pix = require("../../assets/images/plantpicturecollection");
               />
           </View>
   
-            <View style={styles.statsView}>
-              <Image style={styles.statsIcon} source={pix.heart} />  
-              <Text style={styles.statsText}> {this.state.stats.grown} PLANTS GROWN </Text>
-              <Image style={styles.statsIcon} source={pix.skull} /> 
-              <Text style={styles.statsText}> {this.state.stats.killed} PLANTS KILLED </Text>
+            <View style={this.styles.statsView}>
+              <Image style={this.styles.statsIcon} source={pix.heart} />  
+              <Text style={this.styles.statsText}> {this.state.stats.grown} PLANTS GROWN </Text>
+              <Image style={this.styles.statsIcon} source={pix.skull} /> 
+              <Text style={this.styles.statsText}> {this.state.stats.killed} PLANTS KILLED </Text>
               </View>
-            <View style={styles.hallOfFarmContainer}> 
-                  <Text style={styles.hallOfFarmText}>
+            <View style={this.styles.hallOfFarmContainer}> 
+                  <Text style={this.styles.hallOfFarmText}>
                     Hall of Farm
                     </Text>
                 {this.state.hallOfInfo === true ?
                   <ListView
-                    contentContainerStyle={styles.list}
+                    contentContainerStyle={this.styles.list}
                     automaticallyAdjustContentInsets={true}
                     dataSource={this.state.plantsGrown}
                     renderRow={this._renderRowPicture}
@@ -224,7 +237,7 @@ const pix = require("../../assets/images/plantpicturecollection");
                   /> : null }
                 {this.state.hallOfInfo === false ? 
                   <ListView
-                  contentContainerStyle={styles.list}
+                  contentContainerStyle={this.styles.list}
                   automaticallyAdjustContentInsets={true}
                   dataSource={this.state.plantsName}
                   renderRow={this._renderRowName}
@@ -382,6 +395,153 @@ const styles = StyleSheet.create({
   item: {
       fontFamily: 'Pxlvetica',
       fontSize: 15,
+      color: '#fff'
+  }
+})
+
+const smallStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#628980'
+  },
+  hallOfFarmText: {
+    fontFamily: 'Press Start 2P',
+    fontSize: 13,
+    color: '#fff'
+  },
+  levelText: {
+    fontFamily: 'Pxlvetica',
+    fontSize: 13,
+    color: '#fff'
+  },
+  statsText: {
+    fontFamily: 'Pxlvetica',
+    fontSize: 20,
+    color: '#fff'
+  },
+  progressBar: {
+    padding: 10,
+  },
+  statsIcon: {
+    height: 40,
+    width: 40
+  },
+  fullPlant: {
+    height: 100,
+    width: 100
+  },
+  profileInfoContainer: {
+    flexDirection: 'row',
+    height: 65,
+    margin: 5,
+    borderRadius: 2,
+    backgroundColor: '#344944'
+  },
+  profileNameContainer: {
+    justifyContent: 'center',
+  },
+  profileName: {
+    marginLeft: 10,
+    fontFamily: 'Press Start 2P',
+    fontSize: 10,
+    color: '#fff',
+  },
+  profileCountsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 5
+  },
+  hallOfFarmItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    backgroundColor: '#7DAFA3',
+    margin: 10,
+    padding: 5,
+    width: 100,
+    height: 100
+  },
+  mute: {
+    width: 15,
+    height: 15
+  },
+  profileCounts: {
+    fontFamily: 'Press Start 2P',
+    fontSize: 12,
+    color: '#fff'
+  },
+  countsName: {
+    fontFamily: 'Press Start 2P',
+    fontSize: 12,
+    color: '#fff'
+  },
+  statsView: {
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  card: {
+    flex: 1,
+    borderBottomWidth: 1,
+    borderColor: '#999',
+    margin: 2,
+  },
+  RawContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    //borderWidth: 1,
+    marginLeft: 5,
+  },
+  logout: {
+    fontFamily: 'Pxlvetica',
+    fontSize: 11,
+    color: '#fff'
+  },
+  hallOfFarmContainer: {
+    padding: 30,
+    backgroundColor: '#98D6C7',
+    borderBottomWidth: 20,
+    borderColor: '#628980'
+  },
+  LeftContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    //borderWidth: 1,
+  },
+  RightContainer: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    marginRight: 10,
+    padding: 10,
+    //borderWidth: 1,
+    //backgroundColor:'#000',
+  },
+  title: {
+    fontFamily: 'Press Start 2P',
+    fontSize: 10,
+    fontWeight: 'bold',
+    padding: 5,
+    color: '#444',
+  },
+  info: {
+    fontFamily: 'Press Start 2P',
+    padding: 3,
+    fontSize: 10,
+  },
+  list: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  bottom: {
+    backgroundColor: '#628980'
+  },
+  item: {
+      fontFamily: 'Pxlvetica',
+      fontSize: 12,
       color: '#fff'
   }
 })

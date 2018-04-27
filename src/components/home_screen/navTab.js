@@ -4,7 +4,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Text,
-  Image
+  Image,
+  Dimensions
 } from 'react-native'
 import { getColor } from '../config'
 import { observer, inject } from 'mobx-react/native'
@@ -26,6 +27,19 @@ let Icon = createIconSetFromFontello(fontelloConfig)
 export default class NavigationTab extends Component {
   constructor(props) {
     super(props)
+
+    
+    this.styles = styles;
+    let d = Dimensions.get('window');
+    const { height, width } = d;
+
+    let isX = (height === 812 || width === 812) ? true : false;
+    // let isSmall = !isx && (height < 600 || width < 600);
+    if (isX) {
+      this.styles = bigStyles;
+      this.setState({showInventory: true});
+    }
+
   }
 
   getTab = (num, activeNum) => {
@@ -38,12 +52,12 @@ export default class NavigationTab extends Component {
 
   render() {
     return (
-      <View style={styles.tabs}>
+      <View style={this.styles.tabs}>
         {this.props.tabs.map((tab, i) => {
           return (
 
-              <TouchableOpacity key={tab} onPress={() => this.props.goToPage(i)} style={styles.tab}>
-                { <Image source={this.getTab(i, this.props.activeTab)} style={styles.navItem}/> }
+              <TouchableOpacity key={tab} onPress={() => this.props.goToPage(i)} style={this.styles.tab}>
+                { <Image source={this.getTab(i, this.props.activeTab)} style={this.styles.navItem}/> }
               </TouchableOpacity>
 
           )
@@ -72,6 +86,31 @@ const styles = StyleSheet.create({
     //position: 'absolute',
   },
   navItem: {
+    height: 50,
+    width: 50
+  }
+})
+
+const bigStyles = StyleSheet.create({
+  tabs: {
+    height: 90,
+    paddingTop: 40,
+    flexDirection: 'row',
+    elevation: 5
+  },
+  tab: {
+    flex: 4,
+    //borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  tabContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    //position: 'absolute',
+  },
+  navItem: {
+    paddingTop: 10,
     height: 50,
     width: 50
   }
