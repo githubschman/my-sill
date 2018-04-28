@@ -138,16 +138,44 @@ export default class WindowSill extends Component {
       }
     });
 
-    let clearNight = new Sound('clear-night.mp3', Sound.MAIN_BUNDLE, (error) => {
+    let nightSongArr = ['clear-night.mp3', 'clear-night2.mp3', 'clear-night3.mp3'];
+    let nightSoundPath = nightSongArr[Math.floor(Math.random() * nightSongArr.length)];
+
+    let clearNight = new Sound(nightSoundPath, Sound.MAIN_BUNDLE, (error) => {
       if (error) {
         console.log('failed to load the sound', error);
         return;
       }
     });
 
-    let defaultSoundPath = (Math.floor(Math.random() * 100) % 2) ? 'sunny-day.mp3' : 'sunny-day2.mp3';
+    let defaultSongArr = ['sunny-day.mp3', 'sunny-day2.mp3', 'sunny-day3.mp3', 'sunny-day4.mp3'];
+    let defaultSoundPath = defaultSongArr[Math.floor(Math.random() * defaultSongArr.length)];
 
     let defaultSound = new Sound(defaultSoundPath, Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+    });
+
+    let clouds = new Sound('cloudy.mp3', Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+    });
+
+    let storm = new Sound('thunder.mp3', Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+    });
+
+    let fogSongArr = ['fog.mp3', 'fog2.mp3'];
+    let fogSoundPath = fogSongArr[Math.floor(Math.random() * fogSongArr.length)];
+
+    let fog = new Sound(fogSoundPath, Sound.MAIN_BUNDLE, (error) => {
       if (error) {
         console.log('failed to load the sound', error);
         return;
@@ -175,9 +203,16 @@ export default class WindowSill extends Component {
       'rain': rain,
       'default': defaultSound,
       'default-night': clearNight,
+
+      'default-hot': defaultSound,
+      'default-cold': defaultSound,
+      'fog': fog,
+      'cloud': clouds,
+      'storm': storm,
+      'storm-night': storm,
+
       'hoeSound': hoeSound,
-      'waterSound': waterSound,
-      // plant seed
+      'waterSound': waterSound
     };
 
     this.setState({allSounds: allSounds});
@@ -339,7 +374,7 @@ export default class WindowSill extends Component {
   }
 
   getHoursTillNextStage = () => {
-    let currentPlant = this.state.selectedPlanter.currentPlant;
+    let currentPlant = this.state.selectedPlanter.currentPlant ? this.state.selectedPlanter.currentPlant : this.state.tempPlant;
     let stageTimes = currentPlant.stage_times;
     let today = new Date();
     let now = today.getTime();
@@ -362,7 +397,7 @@ export default class WindowSill extends Component {
       let totalGrowTime = item.total_time;
       let stageArr = createStageArr(today.getTime(), totalGrowTime / 5);
       // set temp plant info:
-      this.setState({notRecentlyPlanted: false, tempPlant: {name: item.name, stage: 1, id: this.state.selectedPlanter.id, best_sun: item.best_sun, high: item.high, low: item.low}});
+      this.setState({notRecentlyPlanted: false, tempPlant: {name: item.name, stage_times: stageArr, sell_val: item.sell_val, stage: 1, id: this.state.selectedPlanter.id, best_sun: item.best_sun, high: item.high, low: item.low}});
       let newItem = setUpPlant(stageArr, item, today, false);
       planterRef.update({currentPlant: newItem});
       setTimeout(() => decreaseInventory(item, this.store, this.userRef), 100);
@@ -391,7 +426,10 @@ export default class WindowSill extends Component {
             });
           }
 
-          let updatedPlant = Object.assign({}, this.state.selectedPlanter.currentPlant || this.state.tempPlant, {stage_times: newStageTimes})
+          let sellVal = this.state.selectedPlanter.currentPlant ? this.state.selectedPlanter.currentPlant.sell_val : this.state.tempPlant.sell_val;
+          let newSellVal = sellVal + (item.price / 2);
+
+          let updatedPlant = Object.assign({}, this.state.selectedPlanter.currentPlant || this.state.tempPlant, {stage_times: newStageTimes, sell_val: newSellVal})
           this.setState({selectedPlanter: {id: id, currentPlant: updatedPlant}, tempPlanter: {id: planterId}})
           planterRef.update({currentPlant: updatedPlant})
           setTimeout(() => decreaseInventory(item, this.store, this.userRef), 100)

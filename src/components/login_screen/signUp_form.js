@@ -196,7 +196,7 @@ export default class SignUpForm extends Component {
               const gold = 15
               const weather = {temp:0, sun: 'sunny'}
               const user_inventory =  [{name: 'Hoe', amount: 1, type: 'tool', stage: null}]
-              const level_points = 3
+              const level_points = 4
               const stats = {grown: 0, killed: 0, plants: {name: { amount: 0, level: 0}}} 
               const weatherCheckTime = {time: 1};         
               firebaseApp.database().ref('users/' + user.uid)

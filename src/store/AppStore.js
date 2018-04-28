@@ -246,7 +246,8 @@ class AppStore {
           this.checkUserLevel(userRef);
           let userPlants = Object.assign({}, user.stats.plants, {[currentPlant.name] : {name: currentPlant.name || '', amt: (user.stats.plants[currentPlant.name] ? user.stats.plants[currentPlant.name].amt : 0) + 1}})
           let newStats = Object.assign({}, user.stats, {grown: user.stats.grown + 1}, {plants: userPlants})
-          userRef.update({stats: newStats, gold: user.gold + plantWorth, level_points: user.level_points + plantWorth})
+          let newPlantWorth = currentPlant.level_req < 9 ? (plantWorth  + (plantWorth / 2)) : (plantWorth  + (plantWorth * 4));
+          userRef.update({stats: newStats, gold: user.gold + plantWorth, level_points: user.level_points + newPlantWorth})
           planterRef.update({hoed: false, currentPlant: new Planter(planterId)})
         }
       })

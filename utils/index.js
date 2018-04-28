@@ -11,7 +11,7 @@ export const decreaseInventory = (item, props, userRef) => {
 }
 
 export const sillType = (temp, sun) => {
-    
+
     // FOR AM OR PM SILLS
     let date = new Date();
     let fulltime = date.toLocaleString('en-US', { hour: 'numeric', hour12: true });
@@ -23,6 +23,23 @@ export const sillType = (temp, sun) => {
     let str = 'default';
     let rainWords = ['rain', 'drizzle', 'snow'];
     if (sun && temp) {
+
+        // if hot day
+        if (!pm && temp > 70) {
+            str = 'default-hot';
+        }
+
+        // if cold day
+        if (!pm && temp < 40) {
+            str = 'default-cold';
+        }
+
+        // if cloudy day
+        if (!pm && sun.includes('cloud')) {
+            str = 'cloud';
+        }
+
+        // if rainy/snowy day or night
         let precip = rainWords.reduce((acc, rain) => {
             return acc || sun.includes(rain);
         }, false);
@@ -30,8 +47,19 @@ export const sillType = (temp, sun) => {
         if (precip && temp <= 32) {
             str = 'snow';
         } else if (precip && temp > 32) {
-            str = 'rain';
+            if (sun.includes('thunder') || sun.includes('storm')) {
+                str = 'storm';
+            } else {
+                str = 'rain';
+            }
         }
+
+        // if foggy day
+        let fog = sun.includes('fog');
+        if (!pm && fog) {
+            str = 'fog';
+        }
+
     }
     
     if (pm) {
