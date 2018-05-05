@@ -138,8 +138,7 @@ export default class SeedShop extends Component {
     // seeing if the user already has the item in their inventory, if so incrementing
     !this.props.appStore.user_inventory[item.name] ? this.props.appStore.user_inventory[item.name] = item : this.props.appStore.user_inventory[item.name].amount += Number(selectedAmount);
     
-    this.itemRef.on('value', snapshot => {
-      let inventory = snapshot.val();
+      let inventory = this.props.appStore.user_inventory;
       let amt = inventory[item.name] && inventory[item.name].amount ? inventory[item.name].amount + selectedAmount : selectedAmount;
       item.amount = amt;
 
@@ -148,7 +147,6 @@ export default class SeedShop extends Component {
       // updating local points and backend gold
       this.userRef.update({'gold' :  newPoints - (itemPrice * selectedAmount)})
       this.setState({userInfo : {points: newPoints - (itemPrice * selectedAmount)}})
-    })
   }
   
   _renderRow = (item) => {

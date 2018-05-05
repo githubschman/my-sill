@@ -322,10 +322,10 @@ export default class WindowSill extends Component {
 
   pluck = () => {
 
-    let plantId = this.state.tempPlanter ? this.state.tempPlanter.id : this.state.selectedPlanter && this.state.selectedPlanter.id;
+    let plantId = this.state.selectedPlanter.id;
     let pluckingPlant = this.store.pluck(plantId, this.userRef);
     
-    Promise.resolve(pluckingPlant)
+    Promise.all([pluckingPlant])
       .then(() => this.setState({selectedPlanter: new Planter(this.state.selectedPlanter.id)}))
       .catch(console.error);
   }
@@ -407,38 +407,22 @@ export default class WindowSill extends Component {
     } 
     
     else if (item.type === 'fertilizer') {
-      this.userRef.child('planters').child(id).once('value')
-      .then(res => res.val())
-      .then(planter => planter.currentPlant.level_req <= item.level_req && planter.currentPlant.stage !== 'dead')
-      .then(planter => {
-        if (planter) {
-          let oldStageTimes = this.state.selectedPlanter.currentPlant.stage_times;
-          let newStageTimes = [];
-          let percentDecrease = (item.price / 10 * 3600000) + 5; // this will change for each fertilizer
-          
-          oldStageTimes.forEach(oldTime => {
-            newStageTimes.push(Math.floor(oldTime - percentDecrease));
-          });
-          
-          if (this.state.allSounds.hoeSound.getVolume() > 0) {
-            this.state.allSounds.hoeSound.setVolume(10.0);
-            this.state.allSounds.hoeSound.play((success) => {
-              if (success) {
-                console.log('successfully finished playing');
-              }
-            });
-          }
+  
+      let sellVal = this.state.selectedPlanter.currentPlant.sell_val;
+      let newSellVal = sellVal + (item.price / 2);
 
-          let sellVal = this.state.selectedPlanter.currentPlant ? this.state.selectedPlanter.currentPlant.sell_val : this.state.tempPlant.sell_val;
-          let newSellVal = sellVal + (item.price / 2);
-
-          let updatedPlant = Object.assign({}, this.state.selectedPlanter.currentPlant || this.state.tempPlant, {stage_times: newStageTimes, sell_val: newSellVal})
-          this.setState({selectedPlanter: {id: id, currentPlant: updatedPlant}, tempPlanter: {id: planterId}})
-          planterRef.update({currentPlant: updatedPlant})
-          setTimeout(() => decreaseInventory(item, this.store, this.userRef), 100)
-        }  
-      })
-      .catch(console.error);
+      let oldStageTimes = this.state.selectedPlanter.currentPlant.stage_times;
+      let newStageTimes = [];
+      let percentDecrease = (item.price / 10 * 3600000) + 5; // this will change for each fertilizer
+      
+      oldStageTimes.forEach(oldTime => {
+        newStageTimes.push(Math.floor(oldTime - percentDecrease));
+      });
+      
+      let updatedPlant = Object.assign({}, this.state.selectedPlanter.currentPlant, {stage_times: newStageTimes, sell_val: newSellVal})
+      this.setState({selectedPlanter: {id: id, currentPlant: updatedPlant}, tempPlanter: {id: planterId}})
+      planterRef.update({currentPlant: updatedPlant})
+      setTimeout(() => decreaseInventory(item, this.store, this.userRef), 100);
     }
     else if (item.type === 'tool') {
       this.userRef.child('planters').child(id).once('value')
