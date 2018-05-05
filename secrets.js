@@ -1,0 +1,2 @@
+process.env.FIREBASE_KEY = 'AIzaSyBXC4P2fDUw1rHRn2aeAA0zxYfmuO4EmPg'
+process.env.WEATHER_KEY = '303ab912077a21a27371742902b706f7'

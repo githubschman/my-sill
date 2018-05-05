@@ -223,7 +223,7 @@ export default class WindowSill extends Component {
   componentDidMount() {
 
     // Preloading all the songs (and sounds)
-    Sound.setCategory('Playback');
+    Sound.setCategory('Ambient');
     this.preloadSoungs()
 
     let fetchingWeather = this.store.fetchWeather(this.userRef);
@@ -234,6 +234,9 @@ export default class WindowSill extends Component {
         let userInfo = snapshot.val();
         this.store.planters = userInfo.planters;
         this.store.user_inventory = userInfo.user_inventory;
+        if(this.store.user_inventory.Hoe) {
+          delete this.store.user_inventory.Hoe;
+       }
         this.setState({planters: this.state.planters.cloneWithRows(_.toArray(this.store.planters)), userInventory: this.state.userInventory.cloneWithRows(_.toArray(this.store.user_inventory))})   
       })
       Promise.all([fetchingWeather, fetchingUserInfo, checkingUserLevel])
@@ -406,7 +409,7 @@ export default class WindowSill extends Component {
     else if (item.type === 'fertilizer') {
       this.userRef.child('planters').child(id).once('value')
       .then(res => res.val())
-      // .then(planter => planter.currentPlant.level_req <= item.level_req && planter.currentPlant.stage !== 'dead')
+      .then(planter => planter.currentPlant.level_req <= item.level_req && planter.currentPlant.stage !== 'dead')
       .then(planter => {
         if (planter) {
           let oldStageTimes = this.state.selectedPlanter.currentPlant.stage_times;
@@ -585,6 +588,18 @@ export default class WindowSill extends Component {
           return pix.rainPic;
         case 'rain-night':
           return pix.rainNightPic;
+        case 'cloud':
+          return pix.cloudPic;
+        case 'fog':
+          return pix.fogPic;
+        case 'storm':
+          return pix.stormPic;
+        case 'storm-night':
+          return pix.stormNightPic;
+        case 'default-hot':
+          return pix.defaultHotPic;
+        case 'default-cold':
+          return pix.defaultColdPic;
         default:
           return pix.defaultPic;
       }
@@ -747,7 +762,7 @@ export default class WindowSill extends Component {
       color: '#fff',
     },
     plantTitle: {
-      fontSize: 16,
+      fontSize: 10,
       fontWeight: '800',
       color: '#005c50',
       fontFamily: 'Press Start 2P',
@@ -1003,7 +1018,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   plantTitle: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: '800',
     color: '#005c50',
     fontFamily: 'Press Start 2P',

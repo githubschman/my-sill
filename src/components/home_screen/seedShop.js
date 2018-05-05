@@ -79,13 +79,20 @@ export default class SeedShop extends Component {
       firebaseApp.database().ref('items_for_sale/').orderByChild('createdAt').on('value',
       (snapshot) => {    
         if (snapshot.val()) {
-          this.setState({ isEmpty: false, dataSource: this.state.dataSource.cloneWithRows((_.toArray(snapshot.val()))) })
+          let seeds = _.toArray(snapshot.val());
+          let orderedSeeds = seeds.sort((a, b) => {
+            if (a.level_req > b.level_req ) return -1;
+            else if (a.level_req < b.level_req ) return 1;
+            return 0;
+          });
+          this.setState({ isEmpty: false, dataSource: this.state.dataSource.cloneWithRows(orderedSeeds) });
         }
         else {
           this.setState({ isEmpty: true })
         }
         this.setState({ isLoading: false })
-      })
+      });
+
       this.itemRef.on('value', (snapshot) => {
         if(snapshot.val()){
           _.toArray(snapshot.val()).forEach(item => {
@@ -93,7 +100,7 @@ export default class SeedShop extends Component {
           })
           this.setState({userInventory: this.state.userInventory.cloneWithRows(_.toArray(snapshot.val()))})
         }   
-      })
+      });
     })
   }
 
@@ -198,9 +205,15 @@ export default class SeedShop extends Component {
           this.setState({ isFinished: true })
         }
         if (snapshot.val()) {
+          let seeds = _.toArray(snapshot.val());
+          let orderedSeeds = seeds.sort((a, b) => {
+            if (a.level_req > b.level_req ) return -1;
+            else if (a.level_req < b.level_req ) return 1;
+            return 0;
+          });
           this.setState({ isEmpty: false })
           this.setState({
-            dataSource: this.state.dataSource.cloneWithRows((_.toArray(snapshot.val()))),
+            dataSource: this.state.dataSource.cloneWithRows(orderedSeeds),
           })
         }
         this.setState({ isLoading: false })
@@ -458,6 +471,7 @@ const styles = StyleSheet.create({
     width: 30
   },
   title: {
+    marginTop: 2,
     fontFamily: 'Pxlvetica',
     textAlign: 'center',
     fontSize: 45,

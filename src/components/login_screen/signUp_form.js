@@ -85,8 +85,34 @@ export default class SignUpForm extends Component {
                 <View style={styles.submitBtnContainer}>
                   <Text style={styles.submitBtn}>CLOSE</Text>
                 </View>
-                <Text style={styles.dopetunes}> Thanks to Kevin Macleod and Bensounds.com for the dope tunes. </Text>
               </TouchableOpacity>
+              <Text style={styles.dopetunes}> 
+              Thanks to Kevin Macleod and Bensounds.com for the dope tunes:
+              </Text>
+              <Text style={styles.dopetunes}> 
+              - Tenderness 
+              Bensound.com
+              </Text>
+              <Text style={styles.dopetunes}> 
+              - Dewdrop Fantasy
+              - Immersed
+              - Fresh Air
+              - Dreamer
+              - Carpe Diem
+              - Angel Share
+              - Destiny Day
+              - Bittersweet
+              - Porch Swing Days
+              - Summer Day
+              - Pride
+              - Cheery Monday
+              - Odyssey
+              - Inner Light
+              </Text>
+              <Text style={styles.dopetunes}> 
+              Kevin MacLeod (incompetech.com)
+              Licensed under Creative Commons: By Attribution 3.0 License 
+              </Text>
             </ScrollView>
          </View>
         </Modal>
@@ -322,7 +348,7 @@ const styles = StyleSheet.create({
   dopetunes: {
     marginLeft: 10,
     marginRight: 10,
-    marginTop: 5,
+    marginTop: 20,
     marginBottom: 5,
     fontFamily: 'Press Start 2P',
     fontSize: 13,
